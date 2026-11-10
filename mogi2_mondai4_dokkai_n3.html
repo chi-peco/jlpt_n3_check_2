@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模擬試験第2回｜N3 読解 問題4</title>
+<style>
+:root{--bg:#f8f8f6;--surface:#fff;--surface2:#f0f0ee;--border:#d8d8d4;--text:#222;--text-light:#666;--accent:#3a6b8a;--accent-light:#e8f0f5;--tag-bg:#222;--tag-text:#fff;--btn:#bbb;--btn-text:#555;--ruby-color:#3a6b8a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.85}
+header{background:var(--accent);color:#fff;padding:20px 24px 16px;position:sticky;top:0;z-index:100}
+header h1{font-size:1.1rem;font-weight:700;letter-spacing:.05em}
+header p{font-size:.78rem;opacity:.8;margin-top:2px}
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;gap:8px;flex-wrap:wrap;font-size:.75rem;position:sticky;top:57px;z-index:99}
+nav a{color:var(--accent);text-decoration:none;padding:3px 8px;border-radius:3px;border:1px solid var(--accent-light)}
+nav a:hover{background:var(--accent-light)}
+main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+main.wide{max-width:1100px}
+.section{background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:28px;overflow:hidden}
+.section-header{background:var(--accent);color:#fff;padding:10px 18px;font-size:1rem;font-weight:700}
+.section-body{padding:18px}
+.mondai-num{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 4px;background:var(--tag-bg);color:#fff;border-radius:3px;font-size:.85rem;font-weight:700;margin-right:6px;flex-shrink:0}
+.important-box{background:#fff8e1;border-left:3px solid #f0a500;padding:12px 16px;border-radius:0 4px 4px 0;font-size:.9rem;font-weight:700;margin:12px 0}
+.rei-box{background:var(--surface2);border-left:3px solid var(--accent);border-radius:0 4px 4px 0;padding:14px 16px;margin:10px 0 16px;font-size:.93rem}
+.rei-label{display:inline-block;background:var(--tag-bg);color:#fff;font-size:.72rem;padding:1px 8px;border-radius:2px;margin-bottom:8px}
+.line-wrap{display:flex;align-items:flex-start;gap:6px;margin-bottom:6px}
+.line-text{flex:1;min-width:0}
+.btn-group{display:flex;flex-direction:column;gap:3px;flex-shrink:0;padding-top:2px}
+.btn-r,.btn-s{font-size:.65rem;color:var(--btn-text);background:transparent;border:1px solid var(--btn);border-radius:3px;padding:1px 5px;cursor:pointer;line-height:1.4;white-space:nowrap}
+.btn-r:hover,.btn-s:hover{background:#eee}
+.btn-r.open,.btn-s.open{background:var(--accent);color:#fff;border-color:var(--accent)}
+ruby rt{display:none;font-size:.6em;color:var(--ruby-color)}
+ruby.show rt{display:revert}
+.ans-box ruby rt{display:revert}
+.sent-id{display:none;font-size:.8rem;color:#1a3a6b;background:#eaf0f8;border-radius:3px;padding:4px 8px;margin-top:4px;font-weight:400}
+.sent-id.show{display:block}
+u{text-decoration-color:var(--accent);text-underline-offset:3px}
+sup{font-size:.7em}
+.note-box{font-size:.82rem;color:var(--text-light);margin-top:8px;padding-left:4px}
+.chuu-box{background:var(--surface2);border-left:3px solid var(--border);border-radius:0 4px 4px 0;padding:8px 14px;margin:8px 0 0;font-size:.85rem;color:var(--text-light)}
+.p9-cols{display:grid;grid-template-columns:54% 46%;gap:0;align-items:start;margin:12px 0}
+.p9-left{padding-right:18px;border-right:2px solid var(--border);font-size:.93rem;line-height:1.85}
+.p9-right{padding-left:22px;font-size:.9rem}
+.p9-context-label{font-size:.82rem;color:var(--text-light);border-bottom:1px dashed var(--border);padding-bottom:6px}
+.p9-btn-row{display:flex;gap:4px;margin:4px 0 8px}
+.p9-q-label{font-size:.93rem;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:4px}
+.p9-q-label .sent-id{color:#1a3a6b}
+.p9-qblock{margin-bottom:22px}
+.p9-choices{list-style:none;padding:0;margin:8px 0 0;counter-reset:cc}
+.p9-choices li{counter-increment:cc;display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.88rem;line-height:1.7}
+.p9-choices li:last-child{border-bottom:none}
+.p9-choices li::before{content:counter(cc);display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.p9-choices li.p9-ans-correct::before{background:#27ae60;color:#fff;border-color:#27ae60}
+.p9-choice-text{flex:1;min-width:0}
+.p9-choice-btns{display:flex;flex-direction:row;align-items:flex-start;gap:3px;flex-shrink:0}
+.p9-choices li .ans-box{flex-basis:100%;margin-left:26px;margin-top:4px}
+.btn-ans{font-size:.68rem;font-weight:700;color:var(--btn-text);background:transparent;border:1px solid var(--btn);border-radius:3px;padding:2px 6px;cursor:pointer;white-space:nowrap;margin-top:1px}
+.btn-ans:hover{background:#eee}
+.btn-ans.open{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-ans-correct.open{background:#27ae60;color:#fff;border-color:#27ae60}
+.ans-box{display:none;margin-top:6px;background:var(--surface2);border-left:3px solid #bbb;border-radius:0 4px 4px 0;padding:8px 10px;font-size:.82rem;line-height:1.7;color:#555}
+.ans-box.show{display:block}
+.ans-box-correct{color:#1a5c2a;background:#edf7f0;border-left-color:#27ae60}
+.maru{color:#27ae60;font-weight:700}
+.batsu{color:#c0392b;font-weight:700}
+.ans-trans{display:block;margin-top:5px;font-size:.78rem;color:#1a3a6b;background:#eaf0f8;border-radius:3px;padding:3px 7px}
+.hl-correct{background:#fff59d;border-radius:3px;padding:1px 2px}
+.hl-wrong{background:#ffcdd2;border-radius:3px;padding:1px 2px}
+.doc-box{border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-top:12px;background:#fafaf8;font-size:.9rem;line-height:1.9}
+.kanji-wrap{display:inline;position:relative}
+.kanji-btn{display:inline;cursor:pointer;border:none;border-bottom:1px dotted #aaa;color:inherit;background:none;padding:0;font:inherit;line-height:inherit}
+.kanji-btn:hover{background:#f0f5f0;border-radius:2px}
+.kanji-pop{display:none;position:absolute;left:0;top:100%;margin-top:4px;background:#1a6b3a;color:#fff;font-size:.75rem;line-height:1.5;padding:3px 8px;border-radius:4px;white-space:nowrap;z-index:200;pointer-events:none;font-weight:400}
+.kanji-wrap.open .kanji-pop{display:block}
+.q-header{display:flex;align-items:flex-start;gap:8px;margin:16px 0 10px}
+.q-header .line-text{flex:1;font-weight:700;font-size:.95rem}
+ol.content-list{padding-left:20px;margin-left:8px}
+ol.content-list li{margin-bottom:6px}
+.passage-para{text-indent:1em;margin-bottom:.7em}
+.passage-label{font-weight:700;font-size:1.05rem;margin-bottom:10px;color:var(--accent);border-bottom:2px solid var(--accent-light);padding-bottom:4px}
+.poster-box{border:2px solid var(--border);border-radius:6px;overflow:hidden;margin:12px 0 16px;font-size:.9rem;background:#fff}
+.poster-title{background:var(--tag-bg);color:#fff;text-align:center;padding:12px 14px;font-weight:700;font-size:1.05rem;letter-spacing:.05em}
+.poster-info{padding:14px 18px;font-size:.88rem;line-height:1.9}
+.poster-info .sec-title{font-weight:700;background:var(--surface2);border-left:3px solid var(--accent);padding:3px 10px;border-radius:0 3px 3px 0;margin:10px 0 4px;font-size:.88rem}
+.poster-info hr{border:none;border-top:1px solid var(--border);margin:10px 0}
+.poster-contact{background:var(--surface2);border-top:1px solid var(--border);padding:8px 18px;font-size:.78rem;color:var(--text-light);text-align:right}
+table.fee{border-collapse:collapse;width:100%;font-size:.8rem;text-align:center;background:#fff}
+table.fee th,table.fee td{border:1px solid #555;padding:5px 6px}
+table.fee th{background:var(--surface2)}
+.tbl-scroll{overflow-x:auto;margin:8px 0}
+@media(max-width:700px){.p9-cols{grid-template-columns:1fr}.p9-left{border-right:none;border-bottom:2px solid var(--border);padding-right:0;padding-bottom:14px;margin-bottom:10px}.p9-right{padding-left:0}body{font-size:15px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>模擬試験 第2回｜N3 読解　問題4　内容理解（短文）</h1>
+  <p>内容理解（短文）｜Pemahaman Isi Teks (Pendek) — インドネシア語訳付き</p>
+</header>
+<nav id="main-nav"><a href="#intro">問題4について</a><a href="#q1">（1）メール</a><a href="#q2">（2）すし屋</a><a href="#q3">（3）クラスの調査</a><a href="#q4">（4）店長のメモ</a></nav>
+<main class="wide">
+<div id="intro" class="section">
+<div class="section-header">問題4｜内容理解（短文）</div>
+<div class="section-body">
+<div class="line-wrap"><div class="line-text" id="t-intro"><ruby>問題<rt>もんだい</rt></ruby>4　つぎの（1）から（4）の<ruby>文章<rt>ぶんしょう</rt></ruby>を<ruby>読<rt>よ</rt></ruby>んで、<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えなさい。<ruby>答<rt>こた</rt></ruby>えは、1・2・3・4から<ruby>最<rt>もっと</rt></ruby>もよいものを<ruby>一<rt>ひと</rt></ruby>つえらびなさい。<div class="sent-id" id="s-intro">Soal 4: Bacalah teks (1) sampai (4) berikut, lalu jawablah pertanyaannya. Pilih satu jawaban yang paling tepat dari 1・2・3・4.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-intro',this)">ル</button><button class="btn-s" onclick="toggleSent('s-intro',this)">文</button></div></div>
+
+</div>
+</div>
+<div id="q1" class="section">
+<div class="section-header">（1）　問24</div>
+<div class="section-body">
+<div class="rei-box"><div class="rei-label">（1）</div>
+<div class="p9-cols">
+<div class="p9-left">
+<div class="p9-context-label" id="t-q1-ctx">これは<ruby>大学<rt>だいがく</rt></ruby>から<ruby>学生<rt>がくせい</rt></ruby>に<ruby>届<rt>とど</rt></ruby>いたメールである。<div class="sent-id" id="s-q1-ctx">Ini adalah email yang diterima para (calon) mahasiswa dari universitas.</div></div>
+<div class="p9-btn-row"><button class="btn-r" onclick="toggleRuby('t-q1-ctx',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-ctx',this)">文</button></div>
+<div class="doc-box">
+<div class="line-wrap"><div class="line-text" id="t-q1-d1">あて<ruby>先<rt>さき</rt></ruby>　：　shinnyusei@mori-college.XX.XX<div class="sent-id" id="s-q1-d1">Kepada: shinnyusei@mori-college.XX.XX</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d1',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q1-d2"><ruby>件<rt>けん</rt></ruby>　<ruby>名<rt>めい</rt></ruby>　：　2021<ruby>年<rt>ねん</rt></ruby><ruby>入学<rt>にゅうがく</rt></ruby><ruby>試験<rt>しけん</rt></ruby>の<ruby>結果<rt>けっか</rt></ruby>について<div class="sent-id" id="s-q1-d2">Perihal: Tentang hasil ujian masuk tahun 2021</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d2',this)">文</button></div></div>
+<div class="line-wrap" style="border-bottom:1px solid #aaa;padding-bottom:6px;margin-bottom:10px;"><div class="line-text" id="t-q1-d3"><ruby>送信<rt>そうしん</rt></ruby><ruby>日時<rt>にちじ</rt></ruby>：　2021<ruby>年<rt>ねん</rt></ruby>01<ruby>月<rt>がつ</rt></ruby>13<ruby>日<rt>にち</rt></ruby>　15：00<div class="sent-id" id="s-q1-d3">Waktu kirim: 13 Januari 2021, pukul 15.00</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d3',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q1-d4"><ruby>森<rt>もり</rt></ruby><ruby>大学<rt>だいがく</rt></ruby>を<span class="kanji-wrap"><button class="kanji-btn"><ruby>受験<rt>じゅけん</rt></ruby></button><span class="kanji-pop">mengikuti ujian (masuk)</span></span>したみなさん<div class="sent-id" id="s-q1-d4">Kepada semua peserta ujian masuk Universitas Mori</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d4',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d4',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q1-d5"><ruby>試験<rt>しけん</rt></ruby>、お<ruby>疲<rt>つか</rt></ruby>れ<ruby>様<rt>さま</rt></ruby>でした。<ruby>明日<rt>あした</rt></ruby>、<ruby>結果<rt>けっか</rt></ruby>の<ruby>発表<rt>はっぴょう</rt></ruby>があります。<div class="sent-id" id="s-q1-d5">Terima kasih atas kerja keras Anda dalam ujian. Besok hasilnya akan diumumkan.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d5',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d5',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q1-d6"><span data-hl="q24a"><ruby>試験<rt>しけん</rt></ruby>の<ruby>結果<rt>けっか</rt></ruby>は、<ruby>学校<rt>がっこう</rt></ruby>のホームページで<ruby>発表<rt>はっぴょう</rt></ruby>します</span>ので<ruby>必<rt>かなら</rt></ruby>ず<ruby>確認<rt>かくにん</rt></ruby>してください。<div class="sent-id" id="s-q1-d6">Hasil ujian akan diumumkan di situs web sekolah, jadi pastikan Anda memeriksanya.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d6',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d6',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q1-d7"><span data-hl="q24c"><ruby>入学<rt>にゅうがく</rt></ruby>が<ruby>決<rt>き</rt></ruby>まった<ruby>方<rt>かた</rt></ruby>には<span class="kanji-wrap"><button class="kanji-btn"><ruby>書類<rt>しょるい</rt></ruby></button><span class="kanji-pop">dokumen</span></span>をお<ruby>送<rt>おく</rt></ruby>りします</span>。<ruby>入学<rt>にゅうがく</rt></ruby><ruby>準備<rt>じゅんび</rt></ruby>の<ruby>進<rt>すす</rt></ruby>め<ruby>方<rt>かた</rt></ruby>が<ruby>書<rt>か</rt></ruby>かれている<ruby>大切<rt>たいせつ</rt></ruby>な<ruby>書類<rt>しょるい</rt></ruby>です。<span data-hl="q24d"><ruby>届<rt>とど</rt></ruby>き<ruby>次第<rt>しだい</rt></ruby>、すぐに<ruby>確認<rt>かくにん</rt></ruby>してください</span>。<div class="sent-id" id="s-q1-d7">Kepada yang dinyatakan diterima, kami akan mengirimkan dokumen. Dokumen ini penting karena berisi cara melakukan persiapan masuk. Begitu dokumen sampai, segera periksa.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d7',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d7',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q1-d8">また、<ruby>一度<rt>いちど</rt></ruby>にたくさんの<ruby>人<rt>ひと</rt></ruby>がアクセスすると、ホームページが<ruby>動<rt>うご</rt></ruby>かなくなることがあります。<span data-hl="q24b">その<ruby>場合<rt>ばあい</rt></ruby>は、<ruby>必<rt>かなら</rt></ruby>ず<span class="kanji-wrap"><button class="kanji-btn"><ruby>学生課<rt>がくせいか</rt></ruby></button><span class="kanji-pop">bagian kemahasiswaan</span></span>の<ruby>方<rt>ほう</rt></ruby>にお<ruby>電話<rt>でんわ</rt></ruby>をお<ruby>願<rt>ねが</rt></ruby>いします</span>。<div class="sent-id" id="s-q1-d8">Selain itu, jika banyak orang mengakses sekaligus, situs web bisa tidak berfungsi. Dalam hal itu, harap menelepon Bagian Kemahasiswaan.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d8',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d8',this)">文</button></div></div>
+<div class="line-wrap" style="text-align:right;"><div class="line-text" id="t-q1-d9"><ruby>森<rt>もり</rt></ruby><ruby>大学<rt>だいがく</rt></ruby>　<ruby>学生課<rt>がくせいか</rt></ruby><div class="sent-id" id="s-q1-d9">Bagian Kemahasiswaan Universitas Mori</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q1-d9',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q1-d9',this)">文</button></div></div>
+</div>
+</div>
+<div class="p9-right">
+<div class="p9-qblock">
+<div class="p9-q-label" id="t-q24-q"><strong>24　このメールからわかることは<ruby>何<rt>なに</rt></ruby>か。</strong><div class="sent-id" id="s-q24-q">24. Apa yang dapat diketahui dari email ini?</div></div>
+<div class="p9-btn-row"><button class="btn-r" onclick="toggleRuby('t-q24-q',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q24-q',this)">文</button></div>
+<ol class="p9-choices">
+<li>
+<div class="p9-choice-text" id="t-q24-c1">ホームページで<ruby>書類<rt>しょるい</rt></ruby>を<ruby>見<rt>み</rt></ruby>ることができる。<div class="sent-id" id="s-q24-c1">Dokumen dapat dilihat di situs web.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q24-c1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q24-c1',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q24-1',this)">答</button></div>
+<div class="ans-box" id="ans-q24-1" data-hl-target="q24a q24c" data-hl-type="wrong"><strong class="batsu">（×）</strong>　ホームページで<ruby>発表<rt>はっぴょう</rt></ruby>するのは<ruby>試験<rt>しけん</rt></ruby>の<ruby>結果<rt>けっか</rt></ruby>。<ruby>書類<rt>しょるい</rt></ruby>は<ruby>送<rt>おく</rt></ruby>られてくる。<br><span class="ans-trans">(×) Yang diumumkan di situs web adalah hasil ujian. Dokumennya dikirimkan.</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q24-c2">ホームページが<ruby>開<rt>ひら</rt></ruby>けない<ruby>場合<rt>ばあい</rt></ruby>は、<ruby>学校<rt>がっこう</rt></ruby>に<ruby>結果<rt>けっか</rt></ruby>を<ruby>見<rt>み</rt></ruby>に<ruby>行<rt>い</rt></ruby>く<ruby>必要<rt>ひつよう</rt></ruby>がある。<div class="sent-id" id="s-q24-c2">Jika situs web tidak bisa dibuka, perlu pergi ke sekolah untuk melihat hasilnya.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q24-c2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q24-c2',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q24-2',this)">答</button></div>
+<div class="ans-box" id="ans-q24-2" data-hl-target="q24b" data-hl-type="wrong"><strong class="batsu">（×）</strong>　ホームページが<ruby>動<rt>うご</rt></ruby>かない<ruby>場合<rt>ばあい</rt></ruby>は、<ruby>学生課<rt>がくせいか</rt></ruby>に<ruby>電話<rt>でんわ</rt></ruby>する。<ruby>学校<rt>がっこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>くとは<ruby>書<rt>か</rt></ruby>いていない。<br><span class="ans-trans">(×) Jika situs web tidak berfungsi, yang harus dilakukan adalah menelepon Bagian Kemahasiswaan. Tidak tertulis harus pergi ke sekolah.</span></div>
+</li>
+<li class="p9-ans-correct-target">
+<div class="p9-choice-text" id="t-q24-c3"><ruby>合格<rt>ごうかく</rt></ruby>した<ruby>人<rt>ひと</rt></ruby>には<ruby>書類<rt>しょるい</rt></ruby>が<ruby>送<rt>おく</rt></ruby>られてくるので、<ruby>確認<rt>かくにん</rt></ruby>しなければならない。<div class="sent-id" id="s-q24-c3">Kepada yang lulus akan dikirimkan dokumen, jadi harus diperiksa.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q24-c3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q24-c3',this)">文</button><button class="btn-ans btn-ans-correct" onclick="toggleAnsBox('ans-q24-3',this)">答</button></div>
+<div class="ans-box ans-box-correct" id="ans-q24-3" data-hl-target="q24c q24d" data-hl-type="correct"><strong class="maru">（○）</strong>　「<ruby>入学<rt>にゅうがく</rt></ruby>が<ruby>決<rt>き</rt></ruby>まった<ruby>方<rt>かた</rt></ruby>には<ruby>書類<rt>しょるい</rt></ruby>をお<ruby>送<rt>おく</rt></ruby>りします」「<ruby>届<rt>とど</rt></ruby>き<ruby>次第<rt>しだい</rt></ruby>、すぐに<ruby>確認<rt>かくにん</rt></ruby>してください」と<ruby>書<rt>か</rt></ruby>いてある。<br><span class="ans-trans">(○) Tertulis: "Kepada yang dinyatakan diterima, kami akan mengirimkan dokumen" dan "Begitu dokumen sampai, segera periksa".</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q24-c4"><ruby>入学<rt>にゅうがく</rt></ruby>のために<ruby>必要<rt>ひつよう</rt></ruby>な<ruby>書類<rt>しょるい</rt></ruby>は<ruby>受験<rt>じゅけん</rt></ruby>した<ruby>人<rt>ひと</rt></ruby><ruby>全員<rt>ぜんいん</rt></ruby>に<ruby>送<rt>おく</rt></ruby>られる。<div class="sent-id" id="s-q24-c4">Dokumen yang diperlukan untuk masuk dikirimkan kepada semua peserta ujian.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q24-c4',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q24-c4',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q24-4',this)">答</button></div>
+<div class="ans-box" id="ans-q24-4" data-hl-target="q24c" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>書類<rt>しょるい</rt></ruby>が<ruby>送<rt>おく</rt></ruby>られるのは、<ruby>入学<rt>にゅうがく</rt></ruby>が<ruby>決<rt>き</rt></ruby>まった<ruby>人<rt>ひと</rt></ruby>だけ。<br><span class="ans-trans">(×) Dokumen hanya dikirimkan kepada orang yang dinyatakan diterima.</span></div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="q2" class="section">
+<div class="section-header">（2）　問25</div>
+<div class="section-body">
+<div class="rei-box"><div class="rei-label">（2）</div>
+<div class="p9-cols">
+<div class="p9-left">
+<div class="line-wrap" style="margin-top:10px;"><div class="line-text" id="t-q2-p1"><ruby>先日<rt>せんじつ</rt></ruby>、<ruby>初<rt>はじ</rt></ruby>めてすし<ruby>屋<rt>や</rt></ruby>に<ruby>行<rt>い</rt></ruby>った。<div class="sent-id" id="s-q2-p1">Beberapa hari yang lalu, saya pergi ke restoran sushi untuk pertama kalinya.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q2-p1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q2-p1',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q2-p2"><ruby>最初<rt>さいしょ</rt></ruby>は、<ruby>食<rt>た</rt></ruby>べたいものを<ruby>自由<rt>じゆう</rt></ruby>に<span class="kanji-wrap"><button class="kanji-btn"><ruby>注文<rt>ちゅうもん</rt></ruby></button><span class="kanji-pop">memesan</span></span>していたが、<ruby>注文<rt>ちゅうもん</rt></ruby>したすしによって、<ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>が<ruby>違<rt>ちが</rt></ruby>うことに<ruby>気<rt>き</rt></ruby>づいた。<ruby>今<rt>いま</rt></ruby>までいろんな<ruby>店<rt>みせ</rt></ruby>でご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べたが、<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>の<ruby>種類<rt>しゅるい</rt></ruby>によって<ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>が<ruby>決<rt>き</rt></ruby>まっているのは<ruby>初<rt>はじ</rt></ruby>めて<ruby>見<rt>み</rt></ruby>た。<span data-hl="q25b"><ruby>全部<rt>ぜんぶ</rt></ruby><ruby>同<rt>おな</rt></ruby>じ<ruby>色<rt>いろ</rt></ruby>の<ruby>方<rt>ほう</rt></ruby>が、<ruby>簡単<rt>かんたん</rt></ruby>にお<ruby>皿<rt>さら</rt></ruby>にのせられるのに</span>、なぜ<ruby>色<rt>いろ</rt></ruby>を<ruby>分<rt>わ</rt></ruby>けるのか<ruby>気<rt>き</rt></ruby>になった。<div class="sent-id" id="s-q2-p2">Awalnya saya memesan apa saja yang ingin saya makan dengan bebas, tetapi saya sadar bahwa warna piringnya berbeda-beda tergantung sushi yang dipesan. Selama ini saya sudah makan di berbagai restoran, tetapi baru pertama kali saya melihat warna piring ditentukan menurut jenis makanannya. Padahal kalau semuanya berwarna sama, sushi bisa diletakkan di piring dengan mudah, jadi saya penasaran mengapa warnanya dibedakan.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q2-p2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q2-p2',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q2-p3">すると、<ruby>一緒<rt>いっしょ</rt></ruby>に<ruby>行<rt>い</rt></ruby>った<ruby>日本人<rt>にほんじん</rt></ruby>の<ruby>友達<rt>ともだち</rt></ruby>が、<span data-hl="q25a"><ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>によってすしの<span class="kanji-wrap"><button class="kanji-btn"><ruby>値段<rt>ねだん</rt></ruby></button><span class="kanji-pop">harga</span></span>が<ruby>違<rt>ちが</rt></ruby>う</span>ことを<ruby>教<rt>おし</rt></ruby>えてくれた。たしかに、これは<ruby>店員<rt>てんいん</rt></ruby>もお<ruby>客<rt>きゃく</rt></ruby>さんも<span data-hl="q25c">どれくらい<ruby>食<rt>た</rt></ruby>べたのかがすぐわかって</span><ruby>良<rt>い</rt></ruby>いなと<ruby>思<rt>おも</rt></ruby>った。<div class="sent-id" id="s-q2-p3">Lalu, teman orang Jepang yang pergi bersama saya memberi tahu bahwa harga sushi berbeda tergantung warna piringnya. Memang benar, menurut saya ini bagus karena baik pegawai maupun pelanggan bisa langsung tahu berapa banyak yang sudah dimakan.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q2-p3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q2-p3',this)">文</button></div></div>
+</div>
+<div class="p9-right">
+<div class="p9-qblock">
+<div class="p9-q-label" id="t-q25-q"><strong>25　<ruby>日本人<rt>にほんじん</rt></ruby>の<ruby>友達<rt>ともだち</rt></ruby>によると、<ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>が<ruby>違<rt>ちが</rt></ruby>うのはどうしてか。</strong><div class="sent-id" id="s-q25-q">25. Menurut teman orang Jepang itu, mengapa warna piringnya berbeda?</div></div>
+<div class="p9-btn-row"><button class="btn-r" onclick="toggleRuby('t-q25-q',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q25-q',this)">文</button></div>
+<ol class="p9-choices">
+<li>
+<div class="p9-choice-text" id="t-q25-c1"><ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>によって、<ruby>食<rt>た</rt></ruby>べられる<ruby>量<rt>りょう</rt></ruby>が<ruby>決<rt>き</rt></ruby>まっているから。<div class="sent-id" id="s-q25-c1">Karena jumlah yang boleh dimakan ditentukan oleh warna piring.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q25-c1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q25-c1',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q25-1',this)">答</button></div>
+<div class="ans-box" id="ans-q25-1" data-hl-target="q25c" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>食<rt>た</rt></ruby>べられる<ruby>量<rt>りょう</rt></ruby>が<ruby>決<rt>き</rt></ruby>まっているとは<ruby>書<rt>か</rt></ruby>いていない。<ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>でわかるのは、どれくらい<ruby>食<rt>た</rt></ruby>べたか。<br><span class="ans-trans">(×) Tidak tertulis bahwa jumlah yang boleh dimakan sudah ditentukan. Yang bisa diketahui dari warna piring adalah berapa banyak yang sudah dimakan.</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q25-c2"><ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>を<ruby>見<rt>み</rt></ruby>れば、すしを<ruby>簡単<rt>かんたん</rt></ruby>にのせられるから。<div class="sent-id" id="s-q25-c2">Karena dengan melihat warna piring, sushi bisa diletakkan dengan mudah.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q25-c2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q25-c2',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q25-2',this)">答</button></div>
+<div class="ans-box" id="ans-q25-2" data-hl-target="q25b" data-hl-type="wrong"><strong class="batsu">（×）</strong>　「<ruby>全部<rt>ぜんぶ</rt></ruby><ruby>同<rt>おな</rt></ruby>じ<ruby>色<rt>いろ</rt></ruby>の<ruby>方<rt>ほう</rt></ruby>が<ruby>簡単<rt>かんたん</rt></ruby>にのせられる」と<ruby>書<rt>か</rt></ruby>いてある。<ruby>逆<rt>ぎゃく</rt></ruby>の<ruby>内容<rt>ないよう</rt></ruby>。<br><span class="ans-trans">(×) Tertulis "kalau semuanya berwarna sama, lebih mudah diletakkan". Isinya berlawanan.</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q25-c3"><ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>によって、<ruby>何<rt>なに</rt></ruby>を<ruby>食<rt>た</rt></ruby>べるか<ruby>決<rt>き</rt></ruby>めることができるから。<div class="sent-id" id="s-q25-c3">Karena kita bisa memutuskan apa yang akan dimakan berdasarkan warna piring.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q25-c3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q25-c3',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q25-3',this)">答</button></div>
+<div class="ans-box" id="ans-q25-3"><strong class="batsu">（×）</strong>　このようなことは<ruby>書<rt>か</rt></ruby>いていない。<br><span class="ans-trans">(×) Hal seperti ini tidak tertulis dalam teks.</span></div>
+</li>
+<li class="p9-ans-correct-target">
+<div class="p9-choice-text" id="t-q25-c4"><ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>によって<ruby>値段<rt>ねだん</rt></ruby>が<ruby>違<rt>ちが</rt></ruby>うから。<div class="sent-id" id="s-q25-c4">Karena harganya berbeda tergantung warna piring.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q25-c4',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q25-c4',this)">文</button><button class="btn-ans btn-ans-correct" onclick="toggleAnsBox('ans-q25-4',this)">答</button></div>
+<div class="ans-box ans-box-correct" id="ans-q25-4" data-hl-target="q25a" data-hl-type="correct"><strong class="maru">（○）</strong>　<ruby>友達<rt>ともだち</rt></ruby>が「<ruby>皿<rt>さら</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>によってすしの<ruby>値段<rt>ねだん</rt></ruby>が<ruby>違<rt>ちが</rt></ruby>う」と<ruby>教<rt>おし</rt></ruby>えてくれた。<br><span class="ans-trans">(○) Teman itu memberi tahu bahwa "harga sushi berbeda tergantung warna piringnya".</span></div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="q3" class="section">
+<div class="section-header">（3）　問26</div>
+<div class="section-body">
+<div class="rei-box"><div class="rei-label">（3）</div>
+<div class="p9-cols">
+<div class="p9-left">
+<div class="line-wrap" style="margin-top:10px;"><div class="line-text" id="t-q3-p1">どのようなクラスは、<span class="kanji-wrap"><button class="kanji-btn"><ruby>成績<rt>せいせき</rt></ruby></button><span class="kanji-pop">nilai (prestasi belajar)</span></span>が<ruby>上<rt>あ</rt></ruby>がりにくいのだろうか。<ruby>同<rt>おな</rt></ruby>じ<ruby>内容<rt>ないよう</rt></ruby>を<ruby>勉強<rt>べんきょう</rt></ruby>している<ruby>二<rt>ふた</rt></ruby>つのクラスを<ruby>半年<rt>はんとし</rt></ruby>の<ruby>間<rt>あいだ</rt></ruby><span class="kanji-wrap"><button class="kanji-btn"><ruby>調査<rt>ちょうさ</rt></ruby></button><span class="kanji-pop">meneliti / menyelidiki</span></span>した。<div class="sent-id" id="s-q3-p1">Kelas seperti apa yang nilainya sulit naik? Dua kelas yang mempelajari isi yang sama diteliti selama setengah tahun.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q3-p1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q3-p1',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q3-p2"><ruby>一<rt>ひと</rt></ruby>つ<ruby>目<rt>め</rt></ruby>のクラスは、<ruby>先生<rt>せんせい</rt></ruby>がきびしい<ruby>顔<rt>かお</rt></ruby>をして<ruby>教<rt>おし</rt></ruby>えていた。<ruby>一方<rt>いっぽう</rt></ruby>、<ruby>二<rt>ふた</rt></ruby>つ<ruby>目<rt>め</rt></ruby>のクラスでは、いつも<ruby>先生<rt>せんせい</rt></ruby>が<ruby>笑顔<rt>えがお</rt></ruby>で<ruby>教<rt>おし</rt></ruby>えていた。<ruby>結果<rt>けっか</rt></ruby>として、<ruby>学生<rt>がくせい</rt></ruby>の<ruby>成績<rt>せいせき</rt></ruby>は<ruby>驚<rt>おどろ</rt></ruby>くほど<ruby>違<rt>ちが</rt></ruby>った。<span data-hl="q26a">きびしい<ruby>顔<rt>かお</rt></ruby>をした<ruby>先生<rt>せんせい</rt></ruby>のクラスで<ruby>学<rt>まな</rt></ruby>んだ<ruby>学生<rt>がくせい</rt></ruby>は、そうではないクラスの<ruby>学生<rt>がくせい</rt></ruby>に<ruby>比<rt>くら</rt></ruby>べ、30%も<ruby>成績<rt>せいせき</rt></ruby>が<ruby>低<rt>ひく</rt></ruby>かった</span>のだ。<div class="sent-id" id="s-q3-p2">Di kelas pertama, guru mengajar dengan wajah tegas. Sebaliknya, di kelas kedua, guru selalu mengajar dengan wajah tersenyum. Hasilnya, nilai para siswa berbeda sampai mengejutkan. Siswa yang belajar di kelas guru berwajah tegas nilainya 30% lebih rendah dibandingkan siswa di kelas yang lain.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q3-p2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q3-p2',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q3-p3">また、<span data-hl="q26b">きびしい<ruby>顔<rt>かお</rt></ruby>をした<ruby>先生<rt>せんせい</rt></ruby>のクラスで<ruby>最<rt>もっと</rt></ruby>も<ruby>成績<rt>せいせき</rt></ruby>が<ruby>低<rt>ひく</rt></ruby>かったのは、<ruby>教師<rt>きょうし</rt></ruby>とコミュニケーションを<ruby>取<rt>と</rt></ruby>る<ruby>機会<rt>きかい</rt></ruby>が<ruby>少<rt>すく</rt></ruby>ない<ruby>学生<rt>がくせい</rt></ruby>だった</span>。<div class="sent-id" id="s-q3-p3">Selain itu, siswa yang nilainya paling rendah di kelas guru berwajah tegas adalah siswa yang jarang berkomunikasi dengan guru.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q3-p3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q3-p3',this)">文</button></div></div>
+</div>
+<div class="p9-right">
+<div class="p9-qblock">
+<div class="p9-q-label" id="t-q26-q"><strong>26　<ruby>勉強<rt>べんきょう</rt></ruby>の<ruby>効果<rt>こうか</rt></ruby>が<ruby>出<rt>で</rt></ruby>なかった<ruby>学生<rt>がくせい</rt></ruby>は、どのような<ruby>学生<rt>がくせい</rt></ruby>か。</strong><div class="sent-id" id="s-q26-q">26. Siswa yang belajarnya tidak membuahkan hasil adalah siswa seperti apa?</div></div>
+<div class="p9-btn-row"><button class="btn-r" onclick="toggleRuby('t-q26-q',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q26-q',this)">文</button></div>
+<ol class="p9-choices">
+<li>
+<div class="p9-choice-text" id="t-q26-c1"><ruby>安心<rt>あんしん</rt></ruby>できるクラスで<ruby>学<rt>まな</rt></ruby>び、<ruby>先生<rt>せんせい</rt></ruby>とのコミュニケーションをよくとった<ruby>学生<rt>がくせい</rt></ruby><div class="sent-id" id="s-q26-c1">Siswa yang belajar di kelas yang membuat tenang dan sering berkomunikasi dengan guru</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q26-c1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q26-c1',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q26-1',this)">答</button></div>
+<div class="ans-box" id="ans-q26-1" data-hl-target="q26a" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>笑顔<rt>えがお</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>のクラス（<ruby>安心<rt>あんしん</rt></ruby>できるクラス）は、<ruby>成績<rt>せいせき</rt></ruby>が<ruby>高<rt>たか</rt></ruby>かった。<br><span class="ans-trans">(×) Kelas guru yang tersenyum (kelas yang membuat tenang) nilainya tinggi.</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q26-c2"><ruby>安心<rt>あんしん</rt></ruby>できるクラスで<ruby>学<rt>まな</rt></ruby>び、<ruby>先生<rt>せんせい</rt></ruby>とのコミュニケーションを<ruby>取<rt>と</rt></ruby>らなかった<ruby>学生<rt>がくせい</rt></ruby><div class="sent-id" id="s-q26-c2">Siswa yang belajar di kelas yang membuat tenang dan tidak berkomunikasi dengan guru</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q26-c2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q26-c2',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q26-2',this)">答</button></div>
+<div class="ans-box" id="ans-q26-2" data-hl-target="q26a" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>成績<rt>せいせき</rt></ruby>が<ruby>低<rt>ひく</rt></ruby>かったのは、きびしい<ruby>顔<rt>かお</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>のクラス。<br><span class="ans-trans">(×) Yang nilainya rendah adalah kelas guru berwajah tegas.</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q26-c3"><ruby>緊張感<rt>きんちょうかん</rt></ruby>のあるクラスで<ruby>学<rt>まな</rt></ruby>び、<ruby>先生<rt>せんせい</rt></ruby>とコミュニケーションをよく<ruby>取<rt>と</rt></ruby>った<ruby>学生<rt>がくせい</rt></ruby><div class="sent-id" id="s-q26-c3">Siswa yang belajar di kelas yang menegangkan dan sering berkomunikasi dengan guru</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q26-c3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q26-c3',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q26-3',this)">答</button></div>
+<div class="ans-box" id="ans-q26-3" data-hl-target="q26b" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>最<rt>もっと</rt></ruby>も<ruby>成績<rt>せいせき</rt></ruby>が<ruby>低<rt>ひく</rt></ruby>かったのは、コミュニケーションを<ruby>取<rt>と</rt></ruby>る<ruby>機会<rt>きかい</rt></ruby>が<ruby>少<rt>すく</rt></ruby>ない<ruby>学生<rt>がくせい</rt></ruby>。<br><span class="ans-trans">(×) Yang nilainya paling rendah adalah siswa yang jarang berkomunikasi dengan guru.</span></div>
+</li>
+<li class="p9-ans-correct-target">
+<div class="p9-choice-text" id="t-q26-c4"><ruby>緊張感<rt>きんちょうかん</rt></ruby>のあるクラスで<ruby>学<rt>まな</rt></ruby>び、<ruby>先生<rt>せんせい</rt></ruby>とコミュニケーションを<ruby>取<rt>と</rt></ruby>らなかった<ruby>学生<rt>がくせい</rt></ruby><div class="sent-id" id="s-q26-c4">Siswa yang belajar di kelas yang menegangkan dan tidak berkomunikasi dengan guru</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q26-c4',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q26-c4',this)">文</button><button class="btn-ans btn-ans-correct" onclick="toggleAnsBox('ans-q26-4',this)">答</button></div>
+<div class="ans-box ans-box-correct" id="ans-q26-4" data-hl-target="q26a q26b" data-hl-type="correct"><strong class="maru">（○）</strong>　きびしい<ruby>顔<rt>かお</rt></ruby>の<ruby>先生<rt>せんせい</rt></ruby>のクラス（<ruby>緊張感<rt>きんちょうかん</rt></ruby>のあるクラス）で、コミュニケーションが<ruby>少<rt>すく</rt></ruby>ない<ruby>学生<rt>がくせい</rt></ruby>が<ruby>最<rt>もっと</rt></ruby>も<ruby>成績<rt>せいせき</rt></ruby>が<ruby>低<rt>ひく</rt></ruby>かった。<br><span class="ans-trans">(○) Di kelas guru berwajah tegas (kelas yang menegangkan), siswa yang jarang berkomunikasi dengan guru nilainya paling rendah.</span></div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="q4" class="section">
+<div class="section-header">（4）　問27</div>
+<div class="section-body">
+<div class="rei-box"><div class="rei-label">（4）</div>
+<div class="p9-cols">
+<div class="p9-left">
+<div class="p9-context-label" id="t-q4-ctx"><ruby>木村<rt>きむら</rt></ruby>さんが<span class="kanji-wrap"><button class="kanji-btn"><ruby>出勤<rt>しゅっきん</rt></ruby></button><span class="kanji-pop">berangkat/masuk kerja</span></span>すると、ロッカーに<ruby>店長<rt>てんちょう</rt></ruby>からのメッセージがはってあった。<div class="sent-id" id="s-q4-ctx">Ketika Kimura-san datang bekerja, di lokernya tertempel pesan dari manajer toko.</div></div>
+<div class="p9-btn-row"><button class="btn-r" onclick="toggleRuby('t-q4-ctx',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q4-ctx',this)">文</button></div>
+<div class="doc-box">
+<div class="line-wrap"><div class="line-text" id="t-q4-d1"><ruby>木村<rt>きむら</rt></ruby>さん<div class="sent-id" id="s-q4-d1">Kimura-san</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q4-d1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q4-d1',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q4-d2">3<ruby>日<rt>か</rt></ruby><ruby>前<rt>まえ</rt></ruby>にうちの<ruby>店<rt>みせ</rt></ruby>で、くつを<ruby>買<rt>か</rt></ruby>ったお<ruby>客<rt>きゃく</rt></ruby>さんから<ruby>連絡<rt>れんらく</rt></ruby>がありました。ハイヒールが、<ruby>買<rt>か</rt></ruby>ってすぐに<ruby>壊<rt>こわ</rt></ruby>れてしまったそうです。<div class="sent-id" id="s-q4-d2">Ada kabar dari pelanggan yang membeli sepatu di toko kita 3 hari yang lalu. Katanya, sepatu hak tingginya rusak tidak lama setelah dibeli.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q4-d2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q4-d2',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q4-d3"><span data-hl="q27a">14<ruby>時<rt>じ</rt></ruby>ごろに<ruby>来店<rt>らいてん</rt></ruby>するそうなので、くつの<ruby>状態<rt>じょうたい</rt></ruby>を<span class="kanji-wrap"><button class="kanji-btn"><ruby>拝見<rt>はいけん</rt></ruby></button><span class="kanji-pop">melihat (bentuk merendah)</span></span>して、<span class="kanji-wrap"><button class="kanji-btn"><ruby>修理<rt>しゅうり</rt></ruby></button><span class="kanji-pop">memperbaiki</span></span>してほしいです</span>。<span data-hl="q27b"><ruby>修理<rt>しゅうり</rt></ruby>の<ruby>方法<rt>ほうほう</rt></ruby>は、<ruby>資料<rt>しりょう</rt></ruby>にしてまとめたので、<ruby>午前中<rt>ごぜんちゅう</rt></ruby>に<ruby>読<rt>よ</rt></ruby>んでおいてください</span>。<div class="sent-id" id="s-q4-d3">Katanya pelanggan itu akan datang ke toko sekitar pukul 14.00, jadi saya ingin Anda melihat kondisi sepatunya dan memperbaikinya. Cara memperbaikinya sudah saya rangkum dalam bentuk dokumen, jadi tolong dibaca pada pagi hari.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q4-d3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q4-d3',this)">文</button></div></div>
+<div class="line-wrap"><div class="line-text" id="t-q4-d4"><span data-hl="q27c"><ruby>私<rt>わたし</rt></ruby>は<ruby>今日<rt>きょう</rt></ruby>、<ruby>野田<rt>のだ</rt></ruby>さんと<ruby>一緒<rt>いっしょ</rt></ruby>にほかの<span class="kanji-wrap"><button class="kanji-btn"><ruby>支店<rt>してん</rt></ruby></button><span class="kanji-pop">kantor/toko cabang</span></span>に<ruby>行<rt>い</rt></ruby>く<ruby>用事<rt>ようじ</rt></ruby>があります。<ruby>終<rt>お</rt></ruby>わったら、すぐに<ruby>店<rt>みせ</rt></ruby>に<ruby>行<rt>い</rt></ruby>きますからね</span>。<div class="sent-id" id="s-q4-d4">Hari ini saya ada urusan pergi ke cabang lain bersama Noda-san. Setelah selesai, saya akan segera datang ke toko, ya.</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q4-d4',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q4-d4',this)">文</button></div></div>
+<div class="line-wrap" style="text-align:right;"><div class="line-text" id="t-q4-d5"><ruby>店長<rt>てんちょう</rt></ruby><div class="sent-id" id="s-q4-d5">Manajer toko</div></div><div class="btn-group"><button class="btn-r" onclick="toggleRuby('t-q4-d5',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q4-d5',this)">文</button></div></div>
+</div>
+</div>
+<div class="p9-right">
+<div class="p9-qblock">
+<div class="p9-q-label" id="t-q27-q"><strong>27　このメモを<ruby>読<rt>よ</rt></ruby>んで、<ruby>木村<rt>きむら</rt></ruby>さんがしなければならないことは<ruby>何<rt>なに</rt></ruby>か。</strong><div class="sent-id" id="s-q27-q">27. Setelah membaca memo ini, apa yang harus dilakukan Kimura-san?</div></div>
+<div class="p9-btn-row"><button class="btn-r" onclick="toggleRuby('t-q27-q',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q27-q',this)">文</button></div>
+<ol class="p9-choices">
+<li>
+<div class="p9-choice-text" id="t-q27-c1"><ruby>店長<rt>てんちょう</rt></ruby>が<ruby>来<rt>く</rt></ruby>るまでに、<ruby>修理<rt>しゅうり</rt></ruby><ruby>方法<rt>ほうほう</rt></ruby>についての<ruby>資料<rt>しりょう</rt></ruby>を<ruby>読<rt>よ</rt></ruby>んでおく。<div class="sent-id" id="s-q27-c1">Membaca dokumen tentang cara memperbaiki sebelum manajer toko datang.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q27-c1',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q27-c1',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q27-1',this)">答</button></div>
+<div class="ans-box" id="ans-q27-1" data-hl-target="q27b q27c" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>資料<rt>しりょう</rt></ruby>は「<ruby>午前中<rt>ごぜんちゅう</rt></ruby>に」<ruby>読<rt>よ</rt></ruby>む。「<ruby>店長<rt>てんちょう</rt></ruby>が<ruby>来<rt>く</rt></ruby>るまでに」ではない。<br><span class="ans-trans">(×) Dokumen harus dibaca "pada pagi hari", bukan "sebelum manajer toko datang".</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q27-c2"><ruby>午前中<rt>ごぜんちゅう</rt></ruby>に、<ruby>修理<rt>しゅうり</rt></ruby>をしてお<ruby>客<rt>きゃく</rt></ruby>さんのために<ruby>資料<rt>しりょう</rt></ruby>を<ruby>作<rt>つく</rt></ruby>る。<div class="sent-id" id="s-q27-c2">Pada pagi hari, memperbaiki sepatu dan membuat dokumen untuk pelanggan.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q27-c2',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q27-c2',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q27-2',this)">答</button></div>
+<div class="ans-box" id="ans-q27-2" data-hl-target="q27a q27b" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>資料<rt>しりょう</rt></ruby>は<ruby>店長<rt>てんちょう</rt></ruby>がもう<ruby>作<rt>つく</rt></ruby>った。<ruby>修理<rt>しゅうり</rt></ruby>はお<ruby>客<rt>きゃく</rt></ruby>さんが<ruby>来<rt>く</rt></ruby>る14<ruby>時<rt>じ</rt></ruby>ごろ。<br><span class="ans-trans">(×) Dokumennya sudah dibuat oleh manajer toko. Perbaikan dilakukan sekitar pukul 14.00 saat pelanggan datang.</span></div>
+</li>
+<li>
+<div class="p9-choice-text" id="t-q27-c3"><ruby>野田<rt>のだ</rt></ruby>さんと<ruby>一緒<rt>いっしょ</rt></ruby>に<ruby>支店<rt>してん</rt></ruby>に<ruby>行<rt>い</rt></ruby>き、<ruby>用事<rt>ようじ</rt></ruby>を<ruby>終<rt>お</rt></ruby>わらせたあとで<ruby>出勤<rt>しゅっきん</rt></ruby>する。<div class="sent-id" id="s-q27-c3">Pergi ke cabang bersama Noda-san, lalu masuk kerja setelah urusannya selesai.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q27-c3',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q27-c3',this)">文</button><button class="btn-ans" onclick="toggleAnsBox('ans-q27-3',this)">答</button></div>
+<div class="ans-box" id="ans-q27-3" data-hl-target="q27c" data-hl-type="wrong"><strong class="batsu">（×）</strong>　<ruby>支店<rt>してん</rt></ruby>に<ruby>行<rt>い</rt></ruby>くのは<ruby>店長<rt>てんちょう</rt></ruby>と<ruby>野田<rt>のだ</rt></ruby>さん。<br><span class="ans-trans">(×) Yang pergi ke cabang adalah manajer toko dan Noda-san.</span></div>
+</li>
+<li class="p9-ans-correct-target">
+<div class="p9-choice-text" id="t-q27-c4"><ruby>午前中<rt>ごぜんちゅう</rt></ruby>に<ruby>修理<rt>しゅうり</rt></ruby><ruby>方法<rt>ほうほう</rt></ruby>についての<ruby>資料<rt>しりょう</rt></ruby>を<ruby>読<rt>よ</rt></ruby>んで、くつの<ruby>状態<rt>じょうたい</rt></ruby>を<ruby>見<rt>み</rt></ruby>る。<div class="sent-id" id="s-q27-c4">Pada pagi hari membaca dokumen tentang cara memperbaiki, lalu melihat kondisi sepatu.</div></div>
+<div class="p9-choice-btns"><button class="btn-r" onclick="toggleRuby('t-q27-c4',this)">ル</button><button class="btn-s" onclick="toggleSent('s-q27-c4',this)">文</button><button class="btn-ans btn-ans-correct" onclick="toggleAnsBox('ans-q27-4',this)">答</button></div>
+<div class="ans-box ans-box-correct" id="ans-q27-4" data-hl-target="q27a q27b" data-hl-type="correct"><strong class="maru">（○）</strong>　<ruby>午前中<rt>ごぜんちゅう</rt></ruby>に<ruby>資料<rt>しりょう</rt></ruby>を<ruby>読<rt>よ</rt></ruby>み、お<ruby>客<rt>きゃく</rt></ruby>さんが<ruby>来<rt>き</rt></ruby>たらくつの<ruby>状態<rt>じょうたい</rt></ruby>を<ruby>見<rt>み</rt></ruby>て<ruby>修理<rt>しゅうり</rt></ruby>する。<br><span class="ans-trans">(○) Membaca dokumen pada pagi hari, lalu saat pelanggan datang, melihat kondisi sepatunya dan memperbaikinya.</span></div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</main>
+<script>
+(function(){var h=document.querySelector('header'),n=document.getElementById('main-nav');function s(){if(h&&n)n.style.top=h.offsetHeight+'px';}s();window.addEventListener('resize',s);})();
+function toggleRuby(id,btn){var el=document.getElementById(id);if(!el)return;var on=btn.classList.toggle('open');el.querySelectorAll('ruby').forEach(function(r){r.classList.toggle('show',on);});}
+function toggleSent(id,btn){var el=document.getElementById(id);if(!el)return;el.classList.toggle('show');btn.classList.toggle('open');}
+function toggleAnsBox(id,btn){
+  var box=document.getElementById(id);if(!box)return;
+  var opening=!box.classList.contains('show');
+  box.classList.toggle('show');btn.classList.toggle('open');
+  var li=btn.closest('li');
+  if(li&&btn.classList.contains('btn-ans-correct')){li.classList.toggle('p9-ans-correct',opening);}
+  var t=box.getAttribute('data-hl-target'),ty=box.getAttribute('data-hl-type');
+  if(!t)return;
+  t.split(' ').forEach(function(k){
+    document.querySelectorAll('[data-hl="'+k+'"]').forEach(function(sp){
+      if(opening){sp.classList.add(ty==='correct'?'hl-correct':'hl-wrong');}
+      else{sp.classList.remove('hl-correct','hl-wrong');}
+    });
+  });
+}
+function closePops(){document.querySelectorAll('.kanji-wrap.open').forEach(function(w){w.classList.remove('open');});}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.kanji-btn');
+  if(b){var w=b.closest('.kanji-wrap');var o=w.classList.contains('open');closePops();if(!o)w.classList.add('open');return;}
+  closePops();
+});
+</script>
+</body>
+</html>

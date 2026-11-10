@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N3 文法 模擬試験 第2回</title>
+<style>
+  :root {
+    --bg: #f9f7f3; --card-bg: #ffffff; --fg: #2c2c2c; --fg-sub: #555;
+    --accent: #3a6b8a; --accent-light: #e8f0f6; --border: #d0ccc4;
+    --ruby-color: #3a6b8a; --ans-bg: #eaf4fb; --ans-border: #3a6b8a;
+    --sent-bg: #f0f7ed; --sent-border: #5a9a5a; --btn-bg: #3a6b8a;
+    --btn-hover: #2d5470; --header-bg: #3a6b8a; --problem-header: #4a7a9a;
+    --blank: #3a6b8a; --star-blank: #c0392b;
+    --passage-bg: #fdfcf8; --passage-border: #c0b090;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1a2e; --card-bg: #16213e; --fg: #e0e0e0; --fg-sub: #aaa;
+      --accent: #5a9bbf; --accent-light: #1a2d3d; --border: #3a3a5a;
+      --ruby-color: #7bbfdf; --ans-bg: #1a2d3d; --ans-border: #5a9bbf;
+      --sent-bg: #1a2d1a; --sent-border: #5a9a5a; --btn-bg: #5a9bbf;
+      --btn-hover: #7ab5d5; --header-bg: #0f2d45; --problem-header: #1a3d55;
+      --blank: #7bbfdf; --star-blank: #e74c3c; --passage-bg: #1e1a10;
+      --passage-border: #6a5a30; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1a2e; --card-bg: #16213e; --fg: #e0e0e0; --fg-sub: #aaa;
+    --accent: #5a9bbf; --accent-light: #1a2d3d; --border: #3a3a5a;
+    --ruby-color: #7bbfdf; --ans-bg: #1a2d3d; --ans-border: #5a9bbf;
+    --sent-bg: #1a2d1a; --sent-border: #5a9a5a; --btn-bg: #5a9bbf;
+    --btn-hover: #7ab5d5; --header-bg: #0f2d45; --problem-header: #1a3d55;
+    --blank: #7bbfdf; --star-blank: #e74c3c; --passage-bg: #1e1a10;
+    --passage-border: #6a5a30; color-scheme: dark;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: "Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    font-size: 15px; line-height: 1.8; padding: 0 0 60px;
+  }
+  .site-header {
+    background: var(--header-bg); color: #fff;
+    padding: 14px max(16px,env(safe-area-inset-left,0px));
+    display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .site-header h1 { font-size: 1.05rem; font-weight: bold; }
+  .badge { background: rgba(255,255,255,0.2); border-radius: 4px; padding: 2px 8px; font-size: 0.78rem; }
+  .control-bar {
+    background: var(--accent-light); border-bottom: 1px solid var(--border);
+    padding: 8px max(16px,env(safe-area-inset-left,0px));
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .control-bar span { font-size: 0.82rem; color: var(--fg-sub); }
+  .ctrl-btn {
+    background: var(--btn-bg); color: #fff; border: none; border-radius: 6px;
+    padding: 4px 12px; font-size: 0.82rem; cursor: pointer; font-weight: bold;
+  }
+  .ctrl-btn:hover { background: var(--btn-hover); }
+  .main { max-width: 820px; margin: 0 auto; padding: 20px max(16px,env(safe-area-inset-left,0px)); }
+  .mondai-section { margin-bottom: 32px; }
+  .mondai-header {
+    background: var(--problem-header); color: #fff;
+    border-radius: 8px 8px 0 0; padding: 10px 16px;
+    font-size: 0.92rem; font-weight: bold; line-height: 1.5;
+  }
+  .mondai-body {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-top: none; border-radius: 0 0 8px 8px;
+    padding: 18px 16px; display: flex; flex-direction: column; gap: 18px;
+  }
+  .q-item { border-bottom: 1px dashed var(--border); padding-bottom: 18px; }
+  .q-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-num {
+    display: inline-block; background: var(--accent); color: #fff;
+    border-radius: 4px; padding: 1px 8px; font-size: 0.83rem;
+    font-weight: bold; margin-bottom: 6px;
+  }
+  .q-text { font-size: 1rem; line-height: 2.1; margin-bottom: 6px; }
+  ruby rt { font-size: 0.55em; color: var(--ruby-color); visibility: hidden; }
+  .show-ruby ruby rt { visibility: visible; }
+  .blank {
+    display: inline-block; border-bottom: 2px solid var(--blank);
+    min-width: 2.5em; text-align: center; color: var(--blank);
+    font-weight: bold; margin: 0 2px;
+  }
+  .star-blank {
+    display: inline-block; border-bottom: 2px solid var(--star-blank);
+    min-width: 2.5em; text-align: center; color: var(--star-blank);
+    font-weight: bold; margin: 0 2px;
+  }
+  .choices {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5px 14px; margin-top: 8px; font-size: 0.95rem;
+  }
+  .choice { display: flex; gap: 6px; }
+  .choice-num { color: var(--accent); font-weight: bold; min-width: 1.2em; }
+  .sent-id {
+    display: none; background: var(--sent-bg);
+    border-left: 3px solid var(--sent-border);
+    border-radius: 0 6px 6px 0; padding: 7px 10px;
+    font-size: 0.87rem; color: var(--fg-sub); margin-top: 7px; line-height: 1.6;
+  }
+  .ans-box {
+    display: none; background: var(--ans-bg);
+    border: 1px solid var(--ans-border); border-radius: 6px;
+    padding: 7px 10px; font-size: 0.88rem; margin-top: 7px;
+    color: var(--accent); font-weight: bold; line-height: 1.6;
+  }
+  .ans-box.open { display: block; }
+  .ans-extra { font-weight: normal; color: var(--fg); margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--ans-border); font-size: 0.86rem; }
+  .ans-extra-title { font-weight: bold; color: var(--accent); margin-bottom: 3px; }
+  .ans-extra div { margin-bottom: 4px; }
+  .btn-row { display: flex; gap: 7px; margin-top: 8px; flex-wrap: wrap; }
+  .btn-ruby,.btn-sent,.btn-ans {
+    border: none; border-radius: 5px; padding: 3px 11px;
+    font-size: 0.8rem; cursor: pointer; font-weight: bold;
+  }
+  .btn-ruby { background: var(--btn-bg); color: #fff; }
+  .btn-sent { background: #5a9a5a; color: #fff; }
+  .btn-ans  { background: #c0392b; color: #fff; }
+  .dialog { display: flex; flex-direction: column; gap: 3px; margin: 3px 0; }
+  .dialog-line { display: flex; gap: 6px; }
+  .dialog-speaker { font-weight: bold; color: var(--accent); min-width: 5em; flex-shrink: 0; }
+  .passage-box {
+    background: var(--passage-bg); border: 2px solid var(--passage-border);
+    border-radius: 8px; padding: 18px 20px; line-height: 2.1;
+    font-size: 0.96rem; margin-bottom: 14px;
+  }
+  .passage-title { text-align: center; font-size: 1.08rem; font-weight: bold; margin-bottom: 10px; }
+  .passage-para { margin-top: 10px; }
+  .box-num {
+    display: inline-block; border: 1.5px solid var(--accent); border-radius: 3px;
+    padding: 0 4px; font-size: 0.85em; font-weight: bold; color: var(--accent);
+    min-width: 2em; text-align: center; margin: 0 2px;
+  }
+  .q9-items { display: flex; flex-direction: column; gap: 16px; }
+  .q9-item { border-bottom: 1px dashed var(--border); padding-bottom: 16px; }
+  .q9-item:last-child { border-bottom: none; padding-bottom: 0; }
+  @media (max-width: 480px) {
+    .choices { grid-template-columns: 1fr; }
+    .mondai-body { padding: 12px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="site-header">
+  <h1>N3 文法 模擬試験 第2回</h1>
+  <div class="badge">言語知識（文法）</div>
+</div>
+<div class="control-bar">
+  <span>一括：</span>
+  <button class="ctrl-btn" onclick="toggleAllRuby()">ル すべて</button>
+  <button class="ctrl-btn" style="background:#5a9a5a;" onclick="toggleAllSent()">文 すべて</button>
+  <button class="ctrl-btn" style="background:#c0392b;" onclick="toggleAllAns()">A すべて</button>
+</div>
+<div class="main">
+<!-- 問題1 -->
+<div class="mondai-section">
+  <div class="mondai-header">問題1　つぎの文の（　　）に入れるのに最もよいものを、１・２・３・４から一つえらびなさい。</div>
+  <div class="mondai-body">
+
+    <div class="q-item" id="q1">
+      <span class="q-num">問1</span>
+      <div class="q-text"><ruby>寝坊<rt>ねぼう</rt></ruby>した<ruby>夫<rt>おっと</rt></ruby>は、ご<ruby>飯<rt>はん</rt></ruby>（　）<ruby>食<rt>た</rt></ruby>べずにあわてて<ruby>家<rt>いえ</rt></ruby>を<ruby>出<rt>で</rt></ruby>て<ruby>行<rt>い</rt></ruby>った。</div>
+      <div class="sent-id">Suami saya yang bangun kesiangan buru-buru keluar rumah tanpa makan nasi (sarapan) sedikit pun.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>も</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>で</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>に</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>の</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q1')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans1')">A</button>
+      </div>
+      <div class="ans-box" id="ans1"><ruby>答<rt>こた</rt></ruby>え：1（も）／「〜も〜ずに」＝ tanpa ~ sama sekali / bahkan ~ pun tidak<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>2 <b>で</b>：はしでご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べる。<br>＝ Makan nasi dengan sumpit.</div><div>3 <b>に</b>：ご<ruby>飯<rt>はん</rt></ruby>にふりかけをかける。<br>＝ Menaburkan furikake di atas nasi.</div><div>4 <b>の</b>：ご<ruby>飯<rt>はん</rt></ruby>の<ruby>量<rt>りょう</rt></ruby>を<ruby>減<rt>へ</rt></ruby>らす。<br>＝ Mengurangi porsi nasi.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q2">
+      <span class="q-num">問2</span>
+      <div class="q-text">この<ruby>島<rt>しま</rt></ruby>は、<ruby>野菜<rt>やさい</rt></ruby>（　）<ruby>魚<rt>さかな</rt></ruby>もおいしいことで<ruby>有名<rt>ゆうめい</rt></ruby>です。</div>
+      <div class="sent-id">Pulau ini terkenal karena bukan hanya sayurannya, ikannya pun enak.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>であるにもかかわらず</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>ばかりではなく</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>なせいで</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>ほど</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q2')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans2')">A</button>
+      </div>
+      <div class="ans-box" id="ans2"><ruby>答<rt>こた</rt></ruby>え：2（ばかりではなく）／「〜ばかりではなく〜も」＝ bukan hanya ~, ~ pun juga<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>であるにもかかわらず</b>：<ruby>彼<rt>かれ</rt></ruby>は<ruby>学生<rt>がくせい</rt></ruby>であるにもかかわらず、ほとんど<ruby>勉強<rt>べんきょう</rt></ruby>しない。<br>＝ Meskipun dia seorang pelajar, dia hampir tidak belajar.</div><div>3 <b>なせいで</b>：<ruby>彼<rt>かれ</rt></ruby>が<ruby>不注意<rt>ふちゅうい</rt></ruby>なせいで、<ruby>事故<rt>じこ</rt></ruby>が<ruby>起<rt>お</rt></ruby>きた。<br>＝ Gara-gara dia ceroboh, terjadi kecelakaan.</div><div>4 <b>ほど</b>：この<ruby>島<rt>しま</rt></ruby>の<ruby>魚<rt>さかな</rt></ruby>ほどおいしい<ruby>魚<rt>さかな</rt></ruby>はない。<br>＝ Tidak ada ikan yang seenak ikan di pulau ini.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q3">
+      <span class="q-num">問3</span>
+      <div class="q-text"><ruby>久<rt>ひさ</rt></ruby>しぶりにふるさとに<ruby>帰<rt>かえ</rt></ruby>ったが、（　）<ruby>母<rt>はは</rt></ruby>の<ruby>料理<rt>りょうり</rt></ruby>はおいしかった。</div>
+      <div class="sent-id">Setelah sekian lama, saya pulang ke kampung halaman, dan masakan ibu tetap enak seperti dulu.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>相変<rt>あいか</rt></ruby>わらず</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>決<rt>けっ</rt></ruby>して</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>いつも</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>そんなに</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q3')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans3')">A</button>
+      </div>
+      <div class="ans-box" id="ans3"><ruby>答<rt>こた</rt></ruby>え：1（<ruby>相変<rt>あいか</rt></ruby>わらず）／「<ruby>相変<rt>あいか</rt></ruby>わらず」＝ tetap seperti dulu (tidak berubah)<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>2 <b><ruby>決<rt>けっ</rt></ruby>して</b>：この<ruby>約束<rt>やくそく</rt></ruby>は<ruby>決<rt>けっ</rt></ruby>して<ruby>忘<rt>わす</rt></ruby>れません。<br>＝ Janji ini tidak akan pernah saya lupakan.（決して〜ない）</div><div>3 <b>いつも</b>：<ruby>母<rt>はは</rt></ruby>はいつも<ruby>朝早<rt>あさはや</rt></ruby>く<ruby>起<rt>お</rt></ruby>きる。<br>＝ Ibu selalu bangun pagi-pagi.</div><div>4 <b>そんなに</b>：そんなに<ruby>急<rt>いそ</rt></ruby>がなくてもいいですよ。<br>＝ Tidak perlu terburu-buru seperti itu.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q4">
+      <span class="q-num">問4</span>
+      <div class="q-text"><ruby>甘<rt>あま</rt></ruby>いものが<ruby>好<rt>す</rt></ruby>きな（　）、<ruby>妹<rt>いもうと</rt></ruby>はチョコレートなどのお<ruby>菓子<rt>かし</rt></ruby>を<ruby>全<rt>まった</rt></ruby>く<ruby>食<rt>た</rt></ruby>べない。</div>
+      <div class="sent-id">Berbeda dengan saya yang suka makanan manis, adik perempuan saya sama sekali tidak makan kue-kue seperti cokelat.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>わたしをきっかけに</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>わたしとともに</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>わたしに<ruby>対<rt>たい</rt></ruby>して</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>わたしにとって</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q4')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans4')">A</button>
+      </div>
+      <div class="ans-box" id="ans4"><ruby>答<rt>こた</rt></ruby>え：3（わたしに<ruby>対<rt>たい</rt></ruby>して）／「〜に<ruby>対<rt>たい</rt></ruby>して」＝ berbeda dengan ~ (membandingkan dua hal yang berlawanan)<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>をきっかけに</b>：<ruby>留学<rt>りゅうがく</rt></ruby>をきっかけに、<ruby>日本<rt>にほん</rt></ruby>の<ruby>文化<rt>ぶんか</rt></ruby>に<ruby>興味<rt>きょうみ</rt></ruby>を<ruby>持<rt>も</rt></ruby>った。<br>＝ Berawal dari belajar di luar negeri, saya jadi tertarik pada budaya Jepang.</div><div>2 <b>とともに</b>：<ruby>家族<rt>かぞく</rt></ruby>とともに<ruby>日本<rt>にほん</rt></ruby>に<ruby>来<rt>き</rt></ruby>ました。<br>＝ Saya datang ke Jepang bersama keluarga.</div><div>4 <b>にとって</b>：わたしにとって、<ruby>家族<rt>かぞく</rt></ruby>は<ruby>一番<rt>いちばん</rt></ruby><ruby>大切<rt>たいせつ</rt></ruby>です。<br>＝ Bagi saya, keluarga adalah yang paling penting.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q5">
+      <span class="q-num">問5</span>
+      <div class="q-text"><ruby>一年<rt>いちねん</rt></ruby>（　）<ruby>発表<rt>はっぴょう</rt></ruby>される<ruby>彼<rt>かれ</rt></ruby>の<ruby>小説<rt>しょうせつ</rt></ruby>は、どれもすぐ<ruby>売<rt>う</rt></ruby>り<ruby>切<rt>き</rt></ruby>れになる。</div>
+      <div class="sent-id">Novel-novelnya yang diterbitkan setiap satu tahun, semuanya langsung habis terjual.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>にあたって</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>ごとに</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>の<ruby>際<rt>さい</rt></ruby>に</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>に<ruby>先立<rt>さきだ</rt></ruby>って</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q5')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans5')">A</button>
+      </div>
+      <div class="ans-box" id="ans5"><ruby>答<rt>こた</rt></ruby>え：2（ごとに）／「〜ごとに」＝ setiap ~<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>にあたって</b>：<ruby>新<rt>あたら</rt></ruby>しい<ruby>生活<rt>せいかつ</rt></ruby>を<ruby>始<rt>はじ</rt></ruby>めるにあたって、<ruby>部屋<rt>へや</rt></ruby>を<ruby>借<rt>か</rt></ruby>りた。<br>＝ Dalam rangka memulai kehidupan baru, saya menyewa kamar.</div><div>3 <b>の<ruby>際<rt>さい</rt></ruby>に</b>：お<ruby>帰<rt>かえ</rt></ruby>りの<ruby>際<rt>さい</rt></ruby>に、<ruby>忘<rt>わす</rt></ruby>れ<ruby>物<rt>もの</rt></ruby>にご<ruby>注意<rt>ちゅうい</rt></ruby>ください。<br>＝ Saat pulang, harap periksa agar tidak ada barang yang tertinggal.</div><div>4 <b>に<ruby>先立<rt>さきだ</rt></ruby>って</b>：<ruby>試合<rt>しあい</rt></ruby>に<ruby>先立<rt>さきだ</rt></ruby>って、<ruby>開会式<rt>かいかいしき</rt></ruby>が<ruby>行<rt>おこな</rt></ruby>われた。<br>＝ Sebelum pertandingan, diadakan upacara pembukaan.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q6">
+      <span class="q-num">問6</span>
+      <div class="q-text">（<ruby>学校<rt>がっこう</rt></ruby>で）
+<div class="dialog"><div class="dialog-line"><span class="dialog-speaker"><ruby>生徒<rt>せいと</rt></ruby>：</span><span>「<ruby>先生<rt>せんせい</rt></ruby>、わたし<ruby>行<rt>い</rt></ruby>きたい<ruby>高校<rt>こうこう</rt></ruby>に<ruby>合格<rt>ごうかく</rt></ruby>できるのか<ruby>不安<rt>ふあん</rt></ruby>なんです。」</span></div><div class="dialog-line"><span class="dialog-speaker"><ruby>先生<rt>せんせい</rt></ruby>：</span><span>「<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>。<ruby>松井<rt>まつい</rt></ruby>さんはこんなに（　）、きっと<ruby>合格<rt>ごうかく</rt></ruby>できるよ。」</span></div></div></div>
+      <div class="sent-id">(Di sekolah)<br>Murid: "Pak/Bu Guru, saya cemas apakah saya bisa lulus ujian masuk SMA yang saya inginkan."<br>Guru: "Tidak apa-apa. Matsui sudah berusaha sekeras ini, jadi pasti bisa lulus."</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>頑張<rt>がんば</rt></ruby>っているはずなのに</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>頑張<rt>がんば</rt></ruby>るとしても</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>頑張<rt>がんば</rt></ruby>るだけ</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>頑張<rt>がんば</rt></ruby>ってるんだから</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q6')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans6')">A</button>
+      </div>
+      <div class="ans-box" id="ans6"><ruby>答<rt>こた</rt></ruby>え：4（<ruby>頑張<rt>がんば</rt></ruby>ってるんだから）／「〜んだから」＝ karena memang ~ (menekankan alasan yang sudah jelas)<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>はずなのに</b>：<ruby>毎日<rt>まいにち</rt></ruby><ruby>練習<rt>れんしゅう</rt></ruby>しているはずなのに、<ruby>全然<rt>ぜんぜん</rt></ruby><ruby>上手<rt>じょうず</rt></ruby>にならない。<br>＝ Seharusnya dia berlatih setiap hari, tetapi sama sekali tidak menjadi mahir.</div><div>2 <b>としても</b>：どんなに<ruby>頑張<rt>がんば</rt></ruby>るとしても、<ruby>一人<rt>ひとり</rt></ruby>では<ruby>無理<rt>むり</rt></ruby>だ。<br>＝ Seberapa keras pun berusaha, kalau sendirian tidak mungkin.</div><div>3 <b>だけ</b>：<ruby>今<rt>いま</rt></ruby>はただ<ruby>頑張<rt>がんば</rt></ruby>るだけだ。<br>＝ Sekarang tinggal berusaha saja.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q7">
+      <span class="q-num">問7</span>
+      <div class="q-text"><ruby>会社<rt>かいしゃ</rt></ruby>から<ruby>家<rt>いえ</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ると、<ruby>玄関<rt>げんかん</rt></ruby>の<ruby>鍵<rt>かぎ</rt></ruby>が（　）だった。<ruby>寝坊<rt>ねぼう</rt></ruby>して<ruby>急<rt>いそ</rt></ruby>いで<ruby>出<rt>で</rt></ruby>てしまったからだろう。</div>
+      <div class="sent-id">Ketika pulang dari kantor, pintu depan rumah dalam keadaan tidak terkunci. Mungkin karena saya bangun kesiangan dan buru-buru keluar.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>開<rt>あ</rt></ruby>いて<ruby>以来<rt>いらい</rt></ruby></span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>開<rt>あ</rt></ruby>きつつ</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>開<rt>あ</rt></ruby>いたまま</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>開<rt>あ</rt></ruby>くばかり</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q7')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans7')">A</button>
+      </div>
+      <div class="ans-box" id="ans7"><ruby>答<rt>こた</rt></ruby>え：3（<ruby>開<rt>あ</rt></ruby>いたまま）／「〜たまま」＝ dalam keadaan ~ (keadaan itu tetap tidak berubah)<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>て<ruby>以来<rt>いらい</rt></ruby></b>：<ruby>日本<rt>にほん</rt></ruby>に<ruby>来<rt>き</rt></ruby>て<ruby>以来<rt>いらい</rt></ruby>、ずっとこの<ruby>町<rt>まち</rt></ruby>に<ruby>住<rt>す</rt></ruby>んでいる。<br>＝ Sejak datang ke Jepang, saya terus tinggal di kota ini.</div><div>2 <b>つつ</b>：<ruby>悪<rt>わる</rt></ruby>いと<ruby>知<rt>し</rt></ruby>りつつ、うそをついてしまった。<br>＝ Meskipun tahu itu salah, saya berbohong.</div><div>4 <b>ばかり</b>：<ruby>彼<rt>かれ</rt></ruby>の<ruby>病気<rt>びょうき</rt></ruby>は<ruby>悪<rt>わる</rt></ruby>くなるばかりだ。<br>＝ Penyakitnya terus saja memburuk.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q8">
+      <span class="q-num">問8</span>
+      <div class="q-text">（<ruby>会社<rt>かいしゃ</rt></ruby>で）
+<div class="dialog"><div class="dialog-line"><span class="dialog-speaker"><ruby>部長<rt>ぶちょう</rt></ruby>：</span><span>「<ruby>来年<rt>らいねん</rt></ruby><ruby>発売<rt>はつばい</rt></ruby>する<ruby>新商品<rt>しんしょうひん</rt></ruby>の<ruby>資料<rt>しりょう</rt></ruby>は<ruby>完成<rt>かんせい</rt></ruby>したのか。」</span></div><div class="dialog-line"><span class="dialog-speaker"><ruby>課長<rt>かちょう</rt></ruby>：</span><span>「すみません。<ruby>今<rt>いま</rt></ruby>、<ruby>作成<rt>さくせい</rt></ruby>（　）。」</span></div></div></div>
+      <div class="sent-id">(Di kantor)<br>Kepala Departemen: "Apakah materi untuk produk baru yang akan dijual tahun depan sudah selesai?"<br>Kepala Seksi: "Mohon maaf. Sekarang sedang saya buat."</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>申<rt>もう</rt></ruby>し<ruby>上<rt>あ</rt></ruby>げます</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>しております</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>でございます</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>申<rt>もう</rt></ruby>します</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q8')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans8')">A</button>
+      </div>
+      <div class="ans-box" id="ans8"><ruby>答<rt>こた</rt></ruby>え：2（しております）／「〜しております」＝ bentuk merendah (kenjougo) dari 「〜しています」<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b><ruby>申<rt>もう</rt></ruby>し<ruby>上<rt>あ</rt></ruby>げます</b>：<ruby>心<rt>こころ</rt></ruby>よりお<ruby>礼<rt>れい</rt></ruby><ruby>申<rt>もう</rt></ruby>し<ruby>上<rt>あ</rt></ruby>げます。<br>＝ Saya mengucapkan terima kasih dari lubuk hati.</div><div>3 <b>でございます</b>：こちらが<ruby>新商品<rt>しんしょうひん</rt></ruby>でございます。<br>＝ Ini adalah produk barunya.</div><div>4 <b><ruby>申<rt>もう</rt></ruby>します</b>：はじめまして、<ruby>田中<rt>たなか</rt></ruby>と<ruby>申<rt>もう</rt></ruby>します。<br>＝ Perkenalkan, nama saya Tanaka.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q9">
+      <span class="q-num">問9</span>
+      <div class="q-text"><ruby>久<rt>ひさ</rt></ruby>しぶりに<ruby>両親<rt>りょうしん</rt></ruby>に<ruby>会<rt>あ</rt></ruby>えることも<ruby>楽<rt>たの</rt></ruby>しみだが、<ruby>飼<rt>か</rt></ruby>っている<ruby>犬<rt>いぬ</rt></ruby>（　）<ruby>会<rt>あ</rt></ruby>うのが<ruby>楽<rt>たの</rt></ruby>しみだ。</div>
+      <div class="sent-id">Saya senang bisa bertemu orang tua setelah sekian lama, tetapi saya juga menantikan bertemu dengan anjing peliharaan saya.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>まで</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>には</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>より</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>にも</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q9')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans9')">A</button>
+      </div>
+      <div class="ans-box" id="ans9"><ruby>答<rt>こた</rt></ruby>え：4（にも）／「〜にも」＝ juga (dengan/kepada) ~（に＋も）<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>まで</b>：<ruby>駅<rt>えき</rt></ruby>まで<ruby>歩<rt>ある</rt></ruby>いて<ruby>行<rt>い</rt></ruby>く。<br>＝ Berjalan kaki sampai stasiun.</div><div>2 <b>には</b>：この<ruby>仕事<rt>しごと</rt></ruby>は<ruby>私<rt>わたし</rt></ruby>には<ruby>難<rt>むずか</rt></ruby>しい。<br>＝ Pekerjaan ini sulit bagi saya.</div><div>3 <b>より</b>：<ruby>今日<rt>きょう</rt></ruby>は<ruby>昨日<rt>きのう</rt></ruby>より<ruby>暑<rt>あつ</rt></ruby>い。<br>＝ Hari ini lebih panas daripada kemarin.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q10">
+      <span class="q-num">問10</span>
+      <div class="q-text"><ruby>字<rt>じ</rt></ruby>が<ruby>上手<rt>じょうず</rt></ruby>に<ruby>書<rt>か</rt></ruby>けるようになるには、<ruby>毎日<rt>まいにち</rt></ruby><ruby>書<rt>か</rt></ruby>く<ruby>練習<rt>れんしゅう</rt></ruby>を（　）。</div>
+      <div class="sent-id">Agar bisa menulis huruf dengan bagus, tidak ada cara lain selain berlatih menulis setiap hari.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>することはない</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>しきれない</span></div>
+        <div class="choice"><span class="choice-num">3</span><span>するしかない</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>しようがない</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q10')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans10')">A</button>
+      </div>
+      <div class="ans-box" id="ans10"><ruby>答<rt>こた</rt></ruby>え：3（するしかない）／「〜しかない」＝ tidak ada cara lain selain ~<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>することはない</b>：<ruby>心配<rt>しんぱい</rt></ruby>することはないよ。<br>＝ Tidak perlu khawatir.</div><div>2 <b>しきれない</b>：<ruby>一人<rt>ひとり</rt></ruby>では<ruby>全部<rt>ぜんぶ</rt></ruby>の<ruby>仕事<rt>しごと</rt></ruby>をしきれない。<br>＝ Sendirian tidak bisa menyelesaikan semua pekerjaan.</div><div>4 <b>しようがない</b>：<ruby>住所<rt>じゅうしょ</rt></ruby>がわからないので、<ruby>連絡<rt>れんらく</rt></ruby>しようがない。<br>＝ Karena alamatnya tidak diketahui, tidak ada cara untuk menghubunginya.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q11">
+      <span class="q-num">問11</span>
+      <div class="q-text"><ruby>今<rt>いま</rt></ruby>の<ruby>会社<rt>かいしゃ</rt></ruby>に（　）10<ruby>年<rt>ねん</rt></ruby>たつが、<ruby>新入社員<rt>しんにゅうしゃいん</rt></ruby>を<ruby>見<rt>み</rt></ruby>ると10<ruby>年前<rt>ねんまえ</rt></ruby>の<ruby>自分<rt>じぶん</rt></ruby>を<ruby>思<rt>おも</rt></ruby>い<ruby>出<rt>だ</rt></ruby>す。</div>
+      <div class="sent-id">Sudah 10 tahun sejak saya masuk perusahaan sekarang, dan setiap melihat karyawan baru, saya teringat diri saya 10 tahun yang lalu.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>入社<rt>にゅうしゃ</rt></ruby>したかったから</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>入社<rt>にゅうしゃ</rt></ruby>しようと<ruby>思<rt>おも</rt></ruby>ってから</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>入社<rt>にゅうしゃ</rt></ruby>してから</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>入社<rt>にゅうしゃ</rt></ruby>するから</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q11')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans11')">A</button>
+      </div>
+      <div class="ans-box" id="ans11"><ruby>答<rt>こた</rt></ruby>え：3（<ruby>入社<rt>にゅうしゃ</rt></ruby>してから）／「〜てから（<ruby>期間<rt>きかん</rt></ruby>）たつ」＝ sudah (sekian lama) sejak ~<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>したかったから</b>：この<ruby>会社<rt>かいしゃ</rt></ruby>に<ruby>入社<rt>にゅうしゃ</rt></ruby>したかったから、<ruby>一生懸命<rt>いっしょうけんめい</rt></ruby><ruby>勉強<rt>べんきょう</rt></ruby>した。<br>＝ Karena ingin masuk perusahaan ini, saya belajar dengan giat.</div><div>2 <b>しようと<ruby>思<rt>おも</rt></ruby>ってから</b>：<ruby>日本<rt>にほん</rt></ruby>に<ruby>行<rt>い</rt></ruby>こうと<ruby>思<rt>おも</rt></ruby>ってから、<ruby>日本語<rt>にほんご</rt></ruby>の<ruby>勉強<rt>べんきょう</rt></ruby>を<ruby>始<rt>はじ</rt></ruby>めた。<br>＝ Sejak berpikir ingin pergi ke Jepang, saya mulai belajar bahasa Jepang.</div><div>4 <b>するから</b>：<ruby>来月<rt>らいげつ</rt></ruby><ruby>入社<rt>にゅうしゃ</rt></ruby>するから、スーツを<ruby>買<rt>か</rt></ruby>った。<br>＝ Karena bulan depan akan mulai bekerja di perusahaan, saya membeli jas.</div></div></div>
+    </div>
+
+    <div class="q-item" id="q12">
+      <span class="q-num">問12</span>
+      <div class="q-text"><ruby>彼<rt>かれ</rt></ruby>の<ruby>携帯<rt>けいたい</rt></ruby>を<ruby>見<rt>み</rt></ruby>てはいけないとわかっていても、つい（　）。</div>
+      <div class="sent-id">Meskipun tahu tidak boleh melihat ponselnya, tanpa sadar saya melihatnya.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>見<rt>み</rt></ruby>てしまう</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>見<rt>み</rt></ruby>せてしまう</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>見<rt>み</rt></ruby>られてしまう</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>見<rt>み</rt></ruby>えてしまう</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q12')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans12')">A</button>
+      </div>
+      <div class="ans-box" id="ans12"><ruby>答<rt>こた</rt></ruby>え：1（<ruby>見<rt>み</rt></ruby>てしまう）／「つい〜てしまう」＝ tanpa sadar (tidak bisa menahan diri) melakukan ~<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>2 <b><ruby>見<rt>み</rt></ruby>せてしまう</b>：<ruby>秘密<rt>ひみつ</rt></ruby>の<ruby>写真<rt>しゃしん</rt></ruby>を<ruby>友達<rt>ともだち</rt></ruby>に<ruby>見<rt>み</rt></ruby>せてしまった。<br>＝ Saya terlanjur menunjukkan foto rahasia kepada teman.（menunjukkan）</div><div>3 <b><ruby>見<rt>み</rt></ruby>られてしまう</b>：<ruby>日記<rt>にっき</rt></ruby>を<ruby>母<rt>はは</rt></ruby>に<ruby>見<rt>み</rt></ruby>られてしまった。<br>＝ Buku harian saya terlanjur dilihat oleh ibu.（dilihat orang lain）</div><div>4 <b><ruby>見<rt>み</rt></ruby>えてしまう</b>：<ruby>窓<rt>まど</rt></ruby>から<ruby>隣<rt>となり</rt></ruby>の<ruby>部屋<rt>へや</rt></ruby>が<ruby>見<rt>み</rt></ruby>えてしまう。<br>＝ Dari jendela, kamar sebelah terlihat (tanpa sengaja).</div></div></div>
+    </div>
+
+    <div class="q-item" id="q13">
+      <span class="q-num">問13</span>
+      <div class="q-text"><div class="dialog"><div class="dialog-line"><span class="dialog-speaker"><ruby>生徒<rt>せいと</rt></ruby>：</span><span>「<ruby>先生<rt>せんせい</rt></ruby>、<ruby>行<rt>い</rt></ruby>きたい<ruby>大学<rt>だいがく</rt></ruby>に<ruby>合格<rt>ごうかく</rt></ruby>するにはどうすればいいですか。」</span></div><div class="dialog-line"><span class="dialog-speaker"><ruby>先生<rt>せんせい</rt></ruby>：</span><span>「<ruby>合格<rt>ごうかく</rt></ruby>したいなら、<ruby>今日<rt>きょう</rt></ruby>から<ruby>一生懸命<rt>いっしょうけんめい</rt></ruby>（　）。」</span></div></div></div>
+      <div class="sent-id">Murid: "Pak/Bu Guru, apa yang harus saya lakukan agar lulus ujian masuk universitas yang saya inginkan?"<br>Guru: "Kalau ingin lulus, kamu harus belajar dengan sungguh-sungguh mulai hari ini, ya."</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>勉強<rt>べんきょう</rt></ruby>してはいけませんね</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>勉強<rt>べんきょう</rt></ruby>しなければなりませんね</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>勉強<rt>べんきょう</rt></ruby>するところです</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>勉強<rt>べんきょう</rt></ruby>しにくいです</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q13')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans13')">A</button>
+      </div>
+      <div class="ans-box" id="ans13"><ruby>答<rt>こた</rt></ruby>え：2（<ruby>勉強<rt>べんきょう</rt></ruby>しなければなりませんね）／「〜なければならない」＝ harus ~<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>てはいけません</b>：<ruby>図書館<rt>としょかん</rt></ruby>で<ruby>大<rt>おお</rt></ruby>きい<ruby>声<rt>こえ</rt></ruby>で<ruby>話<rt>はな</rt></ruby>してはいけません。<br>＝ Tidak boleh berbicara dengan suara keras di perpustakaan.</div><div>3 <b>するところです</b>：これから<ruby>勉強<rt>べんきょう</rt></ruby>するところです。<br>＝ Saya baru akan mulai belajar sekarang.</div><div>4 <b>しにくい</b>：この<ruby>部屋<rt>へや</rt></ruby>はうるさくて<ruby>勉強<rt>べんきょう</rt></ruby>しにくいです。<br>＝ Kamar ini berisik sehingga sulit untuk belajar.</div></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 問題2 -->
+<div class="mondai-section">
+  <div class="mondai-header">問題2　つぎの文の <span style="border-bottom:2px solid #fff;padding:0 1em;">★</span> に入る最もよいものを、１・２・３・４から一つえらびなさい。</div>
+  <div class="mondai-body">
+
+    <div class="q-item" id="q14">
+      <span class="q-num">問14</span>
+      <div class="q-text">
+        <ruby>試合<rt>しあい</rt></ruby>が<ruby>終<rt>お</rt></ruby>わり<span class="blank">＿＿</span><span class="blank">＿＿</span><span class="star-blank">★</span><span class="blank">＿＿</span>をインタビューする。
+      </div>
+      <div class="sent-id">Begitu pertandingan selesai, (kami) akan mewawancarai pemain yang menang tentang perasaannya saat ini.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>優勝<rt>ゆうしょう</rt></ruby>した<ruby>選手<rt>せんしゅ</rt></ruby>に</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>次第<rt>しだい</rt></ruby></span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>今<rt>いま</rt></ruby>の</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>気持<rt>きも</rt></ruby>ち</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q14')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans14')">A</button>
+      </div>
+      <div class="ans-box" id="ans14"><ruby>答<rt>こた</rt></ruby>え：3（2134）／<ruby>並<rt>なら</rt></ruby>び<ruby>順<rt>じゅん</rt></ruby>：<ruby>試合<rt>しあい</rt></ruby>が<ruby>終<rt>お</rt></ruby>わり　<u><ruby>次第<rt>しだい</rt></ruby></u>　<u><ruby>優勝<rt>ゆうしょう</rt></ruby>した<ruby>選手<rt>せんしゅ</rt></ruby>に</u>　<u>★<ruby>今<rt>いま</rt></ruby>の</u>　<u><ruby>気持<rt>きも</rt></ruby>ち</u>　をインタビューする。<br>（<ruby>正答<rt>せいとう</rt></ruby>の★＝3<ruby>番<rt>ばん</rt></ruby>「<ruby>今<rt>いま</rt></ruby>の」）／「〜<ruby>次第<rt>しだい</rt></ruby>」＝ begitu ~ (segera setelah ~)</div>
+    </div>
+
+    <div class="q-item" id="q15">
+      <span class="q-num">問15</span>
+      <div class="q-text">
+        <ruby>日本<rt>にほん</rt></ruby>では<span class="blank">＿＿</span><span class="star-blank">★</span><span class="blank">＿＿</span><span class="blank">＿＿</span><ruby>始<rt>はじ</rt></ruby>める。
+      </div>
+      <div class="sent-id">Di Jepang, bersamaan dengan berakhirnya musim dingin, bunga sakura mulai mekar.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>桜<rt>さくら</rt></ruby>が</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>終<rt>お</rt></ruby>わるとともに</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>冬<rt>ふゆ</rt></ruby>が</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>咲<rt>さ</rt></ruby>き</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q15')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans15')">A</button>
+      </div>
+      <div class="ans-box" id="ans15"><ruby>答<rt>こた</rt></ruby>え：2（3214）／<ruby>並<rt>なら</rt></ruby>び<ruby>順<rt>じゅん</rt></ruby>：<ruby>日本<rt>にほん</rt></ruby>では　<u><ruby>冬<rt>ふゆ</rt></ruby>が</u>　<u>★<ruby>終<rt>お</rt></ruby>わるとともに</u>　<u><ruby>桜<rt>さくら</rt></ruby>が</u>　<u><ruby>咲<rt>さ</rt></ruby>き</u>　<ruby>始<rt>はじ</rt></ruby>める。<br>（<ruby>正答<rt>せいとう</rt></ruby>の★＝2<ruby>番<rt>ばん</rt></ruby>「<ruby>終<rt>お</rt></ruby>わるとともに」）／「〜とともに」＝ bersamaan dengan ~</div>
+    </div>
+
+    <div class="q-item" id="q16">
+      <span class="q-num">問16</span>
+      <div class="q-text">
+        サッカークラブの<span class="blank">＿＿</span><span class="star-blank">★</span><span class="blank">＿＿</span><span class="blank">＿＿</span><ruby>参加<rt>さんか</rt></ruby>できていない。
+      </div>
+      <div class="sent-id">Sejak kaki saya cedera saat latihan klub sepak bola, saya belum bisa ikut pertandingan.</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>試合<rt>しあい</rt></ruby>に</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>以来<rt>いらい</rt></ruby></span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>足<rt>あし</rt></ruby>をけがして</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>練習<rt>れんしゅう</rt></ruby>で</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q16')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans16')">A</button>
+      </div>
+      <div class="ans-box" id="ans16"><ruby>答<rt>こた</rt></ruby>え：3（4321）／<ruby>並<rt>なら</rt></ruby>び<ruby>順<rt>じゅん</rt></ruby>：サッカークラブの　<u><ruby>練習<rt>れんしゅう</rt></ruby>で</u>　<u>★<ruby>足<rt>あし</rt></ruby>をけがして</u>　<u><ruby>以来<rt>いらい</rt></ruby></u>　<u><ruby>試合<rt>しあい</rt></ruby>に</u>　<ruby>参加<rt>さんか</rt></ruby>できていない。<br>（<ruby>正答<rt>せいとう</rt></ruby>の★＝3<ruby>番<rt>ばん</rt></ruby>「<ruby>足<rt>あし</rt></ruby>をけがして」）／「〜て<ruby>以来<rt>いらい</rt></ruby>」＝ sejak ~</div>
+    </div>
+
+    <div class="q-item" id="q17">
+      <span class="q-num">問17</span>
+      <div class="q-text">
+        <div class="dialog"><div class="dialog-line"><span class="dialog-speaker"><ruby>竹田<rt>たけだ</rt></ruby>：</span><span>「<ruby>洋服<rt>ようふく</rt></ruby>がすごく<ruby>汚<rt>よご</rt></ruby>れているね。どうしたの？」</span></div><div class="dialog-line"><span class="dialog-speaker">パク：</span><span>「<ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>っているから、<ruby>土<rt>つち</rt></ruby>の<span class="blank">＿＿</span><span class="star-blank">★</span><span class="blank">＿＿</span><span class="blank">＿＿</span>になっちゃったんだ。」</span></div></div>
+      </div>
+      <div class="sent-id">Takeda: "Bajumu kotor sekali. Kenapa?"<br>Park: "Karena hujan, aku terpeleset dan jatuh di atas tanah, jadi bajuku penuh tanah."</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span>すべって<ruby>転<rt>ころ</rt></ruby>んで</span></div>
+        <div class="choice"><span class="choice-num">2</span><span><ruby>上<rt>うえ</rt></ruby>で</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>洋服<rt>ようふく</rt></ruby>が</span></div>
+        <div class="choice"><span class="choice-num">4</span><span><ruby>土<rt>つち</rt></ruby>だらけ</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q17')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans17')">A</button>
+      </div>
+      <div class="ans-box" id="ans17"><ruby>答<rt>こた</rt></ruby>え：1（2134）／<ruby>並<rt>なら</rt></ruby>び<ruby>順<rt>じゅん</rt></ruby>：<ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>っているから、<ruby>土<rt>つち</rt></ruby>の　<u><ruby>上<rt>うえ</rt></ruby>で</u>　<u>★すべって<ruby>転<rt>ころ</rt></ruby>んで</u>　<u><ruby>洋服<rt>ようふく</rt></ruby>が</u>　<u><ruby>土<rt>つち</rt></ruby>だらけ</u>　になっちゃったんだ。<br>（<ruby>正答<rt>せいとう</rt></ruby>の★＝1<ruby>番<rt>ばん</rt></ruby>「すべって<ruby>転<rt>ころ</rt></ruby>んで」）／「〜だらけ」＝ penuh dengan ~ (biasanya untuk hal yang tidak baik)</div>
+    </div>
+
+    <div class="q-item" id="q18">
+      <span class="q-num">問18</span>
+      <div class="q-text">
+        （<ruby>家<rt>いえ</rt></ruby>で）
+<div class="dialog"><div class="dialog-line"><span class="dialog-speaker"><ruby>母<rt>はは</rt></ruby>：</span><span>「<ruby>夜<rt>よる</rt></ruby>ご<ruby>飯<rt>はん</rt></ruby>できたけど<ruby>食<rt>た</rt></ruby>べる？」</span></div><div class="dialog-line"><span class="dialog-speaker"><ruby>娘<rt>むすめ</rt></ruby>：</span><span>「さっき<span class="blank">＿＿</span><span class="blank">＿＿</span><span class="star-blank">★</span><span class="blank">＿＿</span>もう<ruby>少<rt>すこ</rt></ruby>し<ruby>後<rt>あと</rt></ruby>で<ruby>食<rt>た</rt></ruby>べるね。」</span></div></div>
+      </div>
+      <div class="sent-id">(Di rumah)<br>Ibu: "Makan malam sudah siap, mau makan?"<br>Anak perempuan: "Aku baru saja makan kue tadi, jadi makan malamnya sebentar lagi, ya."</div>
+      <div class="choices">
+        <div class="choice"><span class="choice-num">1</span><span><ruby>食<rt>た</rt></ruby>べた</span></div>
+        <div class="choice"><span class="choice-num">2</span><span>お<ruby>菓子<rt>かし</rt></ruby>を</span></div>
+        <div class="choice"><span class="choice-num">3</span><span><ruby>夜<rt>よる</rt></ruby>ご<ruby>飯<rt>はん</rt></ruby>は</span></div>
+        <div class="choice"><span class="choice-num">4</span><span>ばかりだから</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleSent('q18')">文</button>
+        <button class="btn-ans" onclick="toggleAns('ans18')">A</button>
+      </div>
+      <div class="ans-box" id="ans18"><ruby>答<rt>こた</rt></ruby>え：4（2143）／<ruby>並<rt>なら</rt></ruby>び<ruby>順<rt>じゅん</rt></ruby>：さっき　<u>お<ruby>菓子<rt>かし</rt></ruby>を</u>　<u><ruby>食<rt>た</rt></ruby>べた</u>　<u>★ばかりだから</u>　<u><ruby>夜<rt>よる</rt></ruby>ご<ruby>飯<rt>はん</rt></ruby>は</u>　もう<ruby>少<rt>すこ</rt></ruby>し<ruby>後<rt>あと</rt></ruby>で<ruby>食<rt>た</rt></ruby>べるね。<br>（<ruby>正答<rt>せいとう</rt></ruby>の★＝4<ruby>番<rt>ばん</rt></ruby>「ばかりだから」）／「〜たばかり」＝ baru saja ~</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 問題3 -->
+<div class="mondai-section">
+  <div class="mondai-header">問題3　つぎの文章を読んで、文章全体の内容を考えて、<span style="border:1px solid #fff;border-radius:2px;padding:0 4px;font-size:0.9em;">19</span>から<span style="border:1px solid #fff;border-radius:2px;padding:0 4px;font-size:0.9em;">23</span>の中に入る最もよいものを、１・２・３・４から一つえらびなさい。</div>
+  <div class="mondai-body">
+
+    <div class="passage-box">
+      <p style="margin-bottom:10px;"><ruby>下<rt>した</rt></ruby>の<ruby>文章<rt>ぶんしょう</rt></ruby>は、<ruby>留学生<rt>りゅうがくせい</rt></ruby>が<ruby>書<rt>か</rt></ruby>いた<ruby>作文<rt>さくぶん</rt></ruby>です。</p>
+      <div class="sent-id" id="sent-p0">Teks di bawah ini adalah karangan yang ditulis oleh seorang mahasiswa asing.</div>
+      <div class="passage-title"><ruby>運動会<rt>うんどうかい</rt></ruby></div>
+      <div style="text-align:right;margin-bottom:6px;">ハンナ・コリンズ</div>
+      <div class="btn-row" style="margin-bottom:12px;">
+        <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+        <button class="btn-sent" onclick="toggleAllPassageSent()">文 本文</button>
+      </div>
+
+      <p class="passage-para"><ruby>今年<rt>ことし</rt></ruby>の<ruby>夏<rt>なつ</rt></ruby>、<ruby>私<rt>わたし</rt></ruby>は<ruby>初<rt>はじ</rt></ruby>めて<ruby>運動会<rt>うんどうかい</rt></ruby>というものに<ruby>参加<rt>さんか</rt></ruby>しました。<ruby>運動会<rt>うんどうかい</rt></ruby>は、<ruby>生徒<rt>せいと</rt></ruby>がいくつかのチームに<ruby>分<rt>わ</rt></ruby>かれて、<ruby>他<rt>ほか</rt></ruby>のチームと<ruby>戦<rt>たたか</rt></ruby>います。<ruby>一番<rt>いちばん</rt></ruby><ruby>多<rt>おお</rt></ruby>く<ruby>点数<rt>てんすう</rt></ruby>をとったチームが<ruby>優勝<rt>ゆうしょう</rt></ruby>します。また、その<ruby>日<rt>ひ</rt></ruby>のために<ruby>二<rt>に</rt></ruby>か<ruby>月<rt>げつ</rt></ruby>も<ruby>前<rt>まえ</rt></ruby>から<ruby>練習<rt>れんしゅう</rt></ruby>を<ruby>行<rt>おこな</rt></ruby>います。</p>
+      <div class="sent-id" id="sent-p1">Musim panas tahun ini, untuk pertama kalinya saya mengikuti yang disebut <i>undoukai</i> (festival olahraga sekolah). Dalam <i>undoukai</i>, para siswa dibagi menjadi beberapa tim dan bertanding melawan tim lain. Tim yang mendapat poin paling banyak menjadi juara. Selain itu, untuk hari itu, latihan sudah dilakukan sejak dua bulan sebelumnya.</div>
+
+      <p class="passage-para"><ruby>私<rt>わたし</rt></ruby>は、<ruby>運動会<rt>うんどうかい</rt></ruby>はお<ruby>祭<rt>まつ</rt></ruby>りのようなものだと<ruby>思<rt>おも</rt></ruby>っていたので、<ruby>練習<rt>れんしゅう</rt></ruby>も<ruby>楽<rt>たの</rt></ruby>しみにしていました。しかし、<ruby>実際<rt>じっさい</rt></ruby>に<ruby>練習<rt>れんしゅう</rt></ruby>が<ruby>始<rt>はじ</rt></ruby>まると、とても<ruby>大変<rt>たいへん</rt></ruby>でした。<ruby>私<rt>わたし</rt></ruby>は<ruby>運動<rt>うんどう</rt></ruby>が<ruby>苦手<rt>にがて</rt></ruby>で、さらに<ruby>暑<rt>あつ</rt></ruby>いのも<ruby>苦手<rt>にがて</rt></ruby>です。どうして<span class="box-num">19</span><ruby>暑<rt>あつ</rt></ruby>い<ruby>中<rt>なか</rt></ruby>、<ruby>走<rt>はし</rt></ruby>ったり、<ruby>並<rt>なら</rt></ruby>ぶ<ruby>練習<rt>れんしゅう</rt></ruby>をしたり、<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>を<ruby>出<rt>だ</rt></ruby>したりしなければならないのかわからず、<ruby>最初<rt>さいしょ</rt></ruby>は<ruby>全然<rt>ぜんぜん</rt></ruby><ruby>楽<rt>たの</rt></ruby>しくありませんでした。<span class="box-num">20</span>みんなが<ruby>頑張<rt>がんば</rt></ruby>って<ruby>練習<rt>れんしゅう</rt></ruby>しているときに<ruby>自分<rt>じぶん</rt></ruby>だけやる<ruby>気<rt>き</rt></ruby>がないのはいけないと<ruby>思<rt>おも</rt></ruby>い、<ruby>頑張<rt>がんば</rt></ruby>ってみることにしました。</p>
+      <div class="sent-id" id="sent-p2">Saya mengira <i>undoukai</i> itu semacam festival, jadi saya pun menantikan latihannya. Namun, ketika latihan benar-benar dimulai, ternyata sangat berat. Saya tidak pandai berolahraga, dan saya juga tidak tahan panas. Saya tidak mengerti mengapa harus berlari, berlatih berbaris, dan berteriak dengan suara keras di tengah cuaca <span class="box-num">19</span> panas, sehingga awalnya sama sekali tidak menyenangkan. <span class="box-num">20</span> saya berpikir tidak baik jika hanya saya sendiri yang tidak bersemangat ketika semua orang berlatih dengan giat, jadi saya memutuskan untuk mencoba berusaha.</div>
+
+      <p class="passage-para"><ruby>練習<rt>れんしゅう</rt></ruby>している<span class="box-num">21</span>チームのみんなとどんどん<ruby>仲良<rt>なかよ</rt></ruby>くなっていきました。またチームのリーダーたちは、チームをもっと<ruby>良<rt>よ</rt></ruby>くするために、わからないことがあったらわかるまで<ruby>教<rt>おし</rt></ruby>えてくれたり、できるようになるまで<ruby>一緒<rt>いっしょ</rt></ruby>に<ruby>練習<rt>れんしゅう</rt></ruby>してくれたりしました。そのおかげで、<ruby>嫌<rt>いや</rt></ruby>だと<ruby>思<rt>おも</rt></ruby>っていた<ruby>練習<rt>れんしゅう</rt></ruby>にも、<ruby>楽<rt>たの</rt></ruby>しく<ruby>積極的<rt>せっきょくてき</rt></ruby>に<ruby>参加<rt>さんか</rt></ruby>するようになり、「みんなで<ruby>優勝<rt>ゆうしょう</rt></ruby>したい」と<ruby>思<rt>おも</rt></ruby>うようになりました。</p>
+      <div class="sent-id" id="sent-p3"><span class="box-num">21</span> berlatih, saya menjadi semakin akrab dengan semua anggota tim. Selain itu, para pemimpin tim, demi membuat tim menjadi lebih baik, mengajari saya sampai paham jika ada hal yang tidak saya mengerti, dan berlatih bersama saya sampai saya bisa. Berkat itu, saya jadi ikut latihan—yang tadinya saya anggap tidak menyenangkan—dengan senang dan aktif, dan saya mulai berpikir, "Saya ingin menjadi juara bersama semuanya."</div>
+
+      <p class="passage-para"><ruby>結果的<rt>けっかてき</rt></ruby>に、<ruby>私<rt>わたし</rt></ruby>たちのチームは<span class="box-num">22</span>。<ruby>悔<rt>くや</rt></ruby>しかったのですが、その<ruby>気持<rt>きも</rt></ruby>ちよりも、「<ruby>楽<rt>たの</rt></ruby>しかった」という<ruby>気持<rt>きも</rt></ruby>ちの<ruby>方<rt>ほう</rt></ruby>が<ruby>大<rt>おお</rt></ruby>きかったです。<ruby>私<rt>わたし</rt></ruby>は、<ruby>結果<rt>けっか</rt></ruby>よりも「<ruby>仲間<rt>なかま</rt></ruby>と<ruby>力<rt>ちから</rt></ruby>を<ruby>合<rt>あ</rt></ruby>わせて<ruby>一生懸命<rt>いっしょうけんめい</rt></ruby><ruby>戦<rt>たたか</rt></ruby>った」ということの<ruby>方<rt>ほう</rt></ruby>がもっと<ruby>大切<rt>たいせつ</rt></ruby>であるということに<span class="box-num">23</span>。<ruby>運動会<rt>うんどうかい</rt></ruby>に<ruby>参加<rt>さんか</rt></ruby>したことで、<ruby>授業<rt>じゅぎょう</rt></ruby>では<ruby>学<rt>まな</rt></ruby>ぶことができないことを<ruby>学<rt>まな</rt></ruby>ぶことができたと<ruby>思<rt>おも</rt></ruby>います。</p>
+      <div class="sent-id" id="sent-p4">Pada akhirnya, tim kami <span class="box-num">22</span>. Saya merasa kecewa, tetapi perasaan "menyenangkan" lebih besar daripada perasaan itu. Saya <span class="box-num">23</span> bahwa daripada hasilnya, "berjuang dengan sungguh-sungguh bersama teman-teman" jauh lebih penting. Dengan mengikuti <i>undoukai</i>, saya rasa saya bisa mempelajari hal-hal yang tidak bisa dipelajari di dalam kelas.</div>
+
+    </div>
+
+    <div class="q9-items">
+      <div class="q9-item" id="q19">
+        <span class="q-num">問19</span>
+        <div class="choices">
+          <div class="choice"><span class="choice-num">1</span><span>そんなに</span></div>
+          <div class="choice"><span class="choice-num">2</span><span>あちらの</span></div>
+          <div class="choice"><span class="choice-num">3</span><span>こんなに</span></div>
+          <div class="choice"><span class="choice-num">4</span><span>どちらの</span></div>
+        </div>
+        <div class="sent-id">1: sebegitu (itu)／2: yang di sana／3: sebegini (ini)／4: yang mana</div>
+        <div class="btn-row">
+          <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+          <button class="btn-sent" onclick="toggleSent('q19')">文</button>
+          <button class="btn-ans" onclick="toggleAns('ans19')">A</button>
+        </div>
+        <div class="ans-box" id="ans19"><ruby>答<rt>こた</rt></ruby>え：3（こんなに）／「こんなに」＝ sebegini ~（menunjuk keadaan yang sedang dialami penulis sendiri, yaitu cuaca panas saat itu）<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>そんなに</b>：そんなに<ruby>心配<rt>しんぱい</rt></ruby>しなくても<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>だよ。<br>＝ Tidak perlu khawatir sebegitu, tidak apa-apa.</div><div>2 <b>あちらの</b>：あちらの<ruby>席<rt>せき</rt></ruby>へどうぞ。<br>＝ Silakan ke kursi yang di sana.</div><div>4 <b>どちらの</b>：どちらの<ruby>色<rt>いろ</rt></ruby>が<ruby>好<rt>す</rt></ruby>きですか。<br>＝ Warna yang mana yang Anda suka?</div></div></div>
+      </div>
+
+      <div class="q9-item" id="q20">
+        <span class="q-num">問20</span>
+        <div class="choices">
+          <div class="choice"><span class="choice-num">1</span><span>そこで</span></div>
+          <div class="choice"><span class="choice-num">2</span><span>しかし</span></div>
+          <div class="choice"><span class="choice-num">3</span><span>すると</span></div>
+          <div class="choice"><span class="choice-num">4</span><span>だから</span></div>
+        </div>
+        <div class="sent-id">1: oleh karena itu (lalu)／2: namun／3: lalu (kemudian terjadi)／4: karena itu</div>
+        <div class="btn-row">
+          <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+          <button class="btn-sent" onclick="toggleSent('q20')">文</button>
+          <button class="btn-ans" onclick="toggleAns('ans20')">A</button>
+        </div>
+        <div class="ans-box" id="ans20"><ruby>答<rt>こた</rt></ruby>え：2（しかし）／「しかし」＝ namun（sebelumnya "tidak menyenangkan", sesudahnya "memutuskan untuk berusaha": isinya berlawanan）<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>そこで</b>：<ruby>道<rt>みち</rt></ruby>がわからなかった。そこで、<ruby>駅員<rt>えきいん</rt></ruby>に<ruby>聞<rt>き</rt></ruby>いた。<br>＝ Saya tidak tahu jalannya. Oleh karena itu, saya bertanya kepada petugas stasiun.</div><div>3 <b>すると</b>：<ruby>窓<rt>まど</rt></ruby>を<ruby>開<rt>あ</rt></ruby>けた。すると、<ruby>涼<rt>すず</rt></ruby>しい<ruby>風<rt>かぜ</rt></ruby>が<ruby>入<rt>はい</rt></ruby>ってきた。<br>＝ Saya membuka jendela. Lalu, angin sejuk masuk.</div><div>4 <b>だから</b>：<ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>っている。だから、<ruby>今日<rt>きょう</rt></ruby>は<ruby>出<rt>で</rt></ruby>かけない。<br>＝ Sedang hujan. Karena itu, hari ini saya tidak pergi.</div></div></div>
+      </div>
+
+      <div class="q9-item" id="q21">
+        <span class="q-num">問21</span>
+        <div class="choices">
+          <div class="choice"><span class="choice-num">1</span><span>うちに</span></div>
+          <div class="choice"><span class="choice-num">2</span><span>ところ</span></div>
+          <div class="choice"><span class="choice-num">3</span><span>ばかり</span></div>
+          <div class="choice"><span class="choice-num">4</span><span>おきに</span></div>
+        </div>
+        <div class="sent-id">1: selama (sambil) ~／2: ketika ~ (ternyata)／3: hanya ~ saja／4: setiap selang ~</div>
+        <div class="btn-row">
+          <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+          <button class="btn-sent" onclick="toggleSent('q21')">文</button>
+          <button class="btn-ans" onclick="toggleAns('ans21')">A</button>
+        </div>
+        <div class="ans-box" id="ans21"><ruby>答<rt>こた</rt></ruby>え：1（うちに）／「〜ているうちに」＝ selama ~ (tanpa disadari terjadi perubahan)<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>2 <b>ところ</b>：<ruby>先生<rt>せんせい</rt></ruby>に<ruby>聞<rt>き</rt></ruby>いたところ、すぐに<ruby>教<rt>おし</rt></ruby>えてくれた。<br>＝ Ketika saya bertanya kepada guru, beliau langsung mengajari saya.</div><div>3 <b>ばかり</b>：<ruby>弟<rt>おとうと</rt></ruby>はゲームばかりしている。<br>＝ Adik laki-laki saya hanya bermain game saja.</div><div>4 <b>おきに</b>：バスは10<ruby>分<rt>ぷん</rt></ruby>おきに<ruby>来<rt>く</rt></ruby>る。<br>＝ Bus datang setiap 10 menit sekali.</div></div></div>
+      </div>
+
+      <div class="q9-item" id="q22">
+        <span class="q-num">問22</span>
+        <div class="choices">
+          <div class="choice"><span class="choice-num">1</span><span><ruby>優勝<rt>ゆうしょう</rt></ruby>することができたと<ruby>思<rt>おも</rt></ruby>います</span></div>
+          <div class="choice"><span class="choice-num">2</span><span><ruby>優勝<rt>ゆうしょう</rt></ruby>するしかありませんでした</span></div>
+          <div class="choice"><span class="choice-num">3</span><span><ruby>優勝<rt>ゆうしょう</rt></ruby>することになりました</span></div>
+          <div class="choice"><span class="choice-num">4</span><span><ruby>優勝<rt>ゆうしょう</rt></ruby>することができませんでした</span></div>
+        </div>
+        <div class="sent-id">1: saya rasa kami bisa menjadi juara／2: tidak ada pilihan selain menjadi juara／3: diputuskan bahwa kami menjadi juara／4: kami tidak bisa menjadi juara</div>
+        <div class="btn-row">
+          <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+          <button class="btn-sent" onclick="toggleSent('q22')">文</button>
+          <button class="btn-ans" onclick="toggleAns('ans22')">A</button>
+        </div>
+        <div class="ans-box" id="ans22"><ruby>答<rt>こた</rt></ruby>え：4（<ruby>優勝<rt>ゆうしょう</rt></ruby>することができませんでした）／<ruby>次<rt>つぎ</rt></ruby>の<ruby>文<rt>ぶん</rt></ruby>に「<ruby>悔<rt>くや</rt></ruby>しかった」とあるので、<ruby>優勝<rt>ゆうしょう</rt></ruby>できなかったことがわかる。＝ Kalimat berikutnya berbunyi "saya merasa kecewa", jadi dapat diketahui bahwa tim mereka tidak bisa menjadi juara.<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b>できたと<ruby>思<rt>おも</rt></ruby>います</b>：みんなが<ruby>頑張<rt>がんば</rt></ruby>ったから、<ruby>優勝<rt>ゆうしょう</rt></ruby>することができたと<ruby>思<rt>おも</rt></ruby>います。<br>＝ Karena semua berusaha keras, saya rasa kami bisa menjadi juara.</div><div>2 <b>するしかありませんでした</b>：<ruby>電車<rt>でんしゃ</rt></ruby>が<ruby>止<rt>と</rt></ruby>まったので、<ruby>歩<rt>ある</rt></ruby>いて<ruby>帰<rt>かえ</rt></ruby>るしかありませんでした。<br>＝ Karena kereta berhenti, tidak ada pilihan lain selain pulang berjalan kaki.</div><div>3 <b>することになりました</b>：<ruby>来月<rt>らいげつ</rt></ruby>、<ruby>大阪<rt>おおさか</rt></ruby>に<ruby>転勤<rt>てんきん</rt></ruby>することになりました。<br>＝ Bulan depan saya akan dipindahtugaskan ke Osaka.</div></div></div>
+      </div>
+
+      <div class="q9-item" id="q23">
+        <span class="q-num">問23</span>
+        <div class="choices">
+          <div class="choice"><span class="choice-num">1</span><span><ruby>気付<rt>きづ</rt></ruby>かされます</span></div>
+          <div class="choice"><span class="choice-num">2</span><span><ruby>気付<rt>きづ</rt></ruby>かれます</span></div>
+          <div class="choice"><span class="choice-num">3</span><span><ruby>気付<rt>きづ</rt></ruby>きました</span></div>
+          <div class="choice"><span class="choice-num">4</span><span><ruby>気付<rt>きづ</rt></ruby>かれました</span></div>
+        </div>
+        <div class="sent-id">1: saya disadarkan (oleh sesuatu)／2: ketahuan (oleh orang lain)／3: saya menyadari／4: telah ketahuan (oleh orang lain)</div>
+        <div class="btn-row">
+          <button class="btn-ruby" onclick="toggleRuby(this)">ル</button>
+          <button class="btn-sent" onclick="toggleSent('q23')">文</button>
+          <button class="btn-ans" onclick="toggleAns('ans23')">A</button>
+        </div>
+        <div class="ans-box" id="ans23"><ruby>答<rt>こた</rt></ruby>え：3（<ruby>気付<rt>きづ</rt></ruby>きました）／「〜ということに<ruby>気付<rt>きづ</rt></ruby>きました」＝ saya menyadari bahwa ~（penulis sendiri yang menyadari, dan itu kejadian yang sudah lewat）<div class="ans-extra"><div class="ans-extra-title">ほかの<ruby>選択肢<rt>せんたくし</rt></ruby>の<ruby>正<rt>ただ</rt></ruby>しい<ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby>（Penggunaan yang benar dari pilihan lain）</div><div>1 <b><ruby>気付<rt>きづ</rt></ruby>かされます</b>：<ruby>子<rt>こ</rt></ruby>どもの<ruby>言葉<rt>ことば</rt></ruby>に、<ruby>大切<rt>たいせつ</rt></ruby>なことを<ruby>気付<rt>きづ</rt></ruby>かされます。<br>＝ Dari perkataan anak-anak, saya disadarkan akan hal yang penting.</div><div>2 <b><ruby>気付<rt>きづ</rt></ruby>かれます</b>：<ruby>静<rt>しず</rt></ruby>かに<ruby>入<rt>はい</rt></ruby>らないと、<ruby>先生<rt>せんせい</rt></ruby>に<ruby>気付<rt>きづ</rt></ruby>かれますよ。<br>＝ Kalau tidak masuk dengan tenang, nanti ketahuan oleh guru, lho.</div><div>4 <b><ruby>気付<rt>きづ</rt></ruby>かれました</b>：<ruby>遅刻<rt>ちこく</rt></ruby>したことを<ruby>先生<rt>せんせい</rt></ruby>に<ruby>気付<rt>きづ</rt></ruby>かれました。<br>＝ Keterlambatan saya ketahuan oleh guru.</div></div></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</div><!-- main -->
+
+<script>
+  function toggleRuby(btn) {
+    const box = btn.closest('.q-item, .q9-item, .passage-box');
+    if (box) box.classList.toggle('show-ruby');
+  }
+  function toggleSent(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const sent = el.querySelector('.sent-id');
+    if (sent) sent.style.display = (sent.style.display === 'block') ? 'none' : 'block';
+  }
+  function toggleAns(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('open');
+  }
+  function toggleAllRuby() {
+    document.querySelectorAll('.show-ruby').forEach(el => { if (el !== document.body) el.classList.remove('show-ruby'); });
+    document.body.classList.toggle('show-ruby');
+  }
+  function toggleAllSent() {
+    const all = document.querySelectorAll('.sent-id');
+    const anyHidden = Array.from(all).some(el => el.style.display !== 'block');
+    all.forEach(el => el.style.display = anyHidden ? 'block' : 'none');
+  }
+  function toggleAllAns() {
+    const all = document.querySelectorAll('.ans-box');
+    const anyHidden = Array.from(all).some(el => !el.classList.contains('open'));
+    all.forEach(el => anyHidden ? el.classList.add('open') : el.classList.remove('open'));
+  }
+  function toggleAllPassageSent() {
+    const ids = ['sent-p0','sent-p1','sent-p2','sent-p3','sent-p4'];
+    const elements = ids.map(id => document.getElementById(id)).filter(Boolean);
+    const anyHidden = elements.some(el => el.style.display !== 'block');
+    elements.forEach(el => el.style.display = anyHidden ? 'block' : 'none');
+  }
+</script>
+</body>
+</html>
